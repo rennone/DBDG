@@ -12,8 +12,8 @@
 *.la
 *.a
 
-build*/CMakeC*
-build*/CMakeF*
-build*/cmake_*
-build*/Makefile
-build*/install_
+CMakeC*
+CMakeF*
+cmake_*
+Makefile
+install_*
