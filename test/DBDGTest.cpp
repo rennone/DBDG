@@ -1,5 +1,6 @@
 #include <GL/glDBDG.h>
 #include <GL/GLFW/glfw3.h>
+
 class TestScene : public DBDG::GLScene
 {
 public:
@@ -25,8 +26,7 @@ public:
   void dispose()
   {
     
-  }
-  
+  }  
 };
 
 class TestGame : public DBDG::GLGame

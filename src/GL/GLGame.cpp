@@ -6,9 +6,10 @@
 
 //glfw glewの mac用の設定
 #define GLFW_NO_GLU
+#include <GL/GL/glew.h>
 #include <GL/GLFW/glfw3.h>
-#include <OpenGL/glext.h>
-#include <OpenGL/gl3ext.h>
+//#include <OpenGL/glext.h>
+//#include <OpenGL/gl3ext.h>
 #include <GL/GL/glut.h>
 
 namespace
@@ -60,9 +61,10 @@ namespace DBDG
     glfwSetErrorCallback(error_callback);
     if(!glfwInit())
     {
+      std::cerr << "cannot start glfw" << std::endl;
       exit(EXIT_FAILURE);
     }
-    
+
     elapsedTime_sec[0] = glfwGetTime();
     elapsedTime_sec[1] = glfwGetTime();
 
@@ -71,13 +73,20 @@ namespace DBDG
     window = glfwCreateWindow(window_width, window_height, window_title.c_str(), _monitor, NULL);  
     if(!window)
     {
+      std::cerr << "cannot open glfw window" << std::endl;
       glfwTerminate();
       exit(EXIT_FAILURE);
     }
-  
+
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this); //このwindowにコールバック用にインプットを登録
-  
+
+if( glewInit() != GLEW_OK )
+    {
+      std::cerr << "cannot start glew" << std::endl;
+      exit(2);
+    }
+
     input  = new GLInput(window);
     audio  = NULL;
 
@@ -85,15 +94,7 @@ namespace DBDG
     glfwSetMouseButtonCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
     glfwSetFramebufferSizeCallback(window, resize_callback);
-
-    /*
-    GLenum glew_error = glewInit();
-    if(glew_error != GLEW_OK)
-    {
-      std::cout << glewGetErrorString(glew_error) << std::endl;
-      exit(2);
-    }
-    */
+        
   };
 
   GLGame::~GLGame()
