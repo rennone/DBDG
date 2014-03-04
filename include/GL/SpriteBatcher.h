@@ -20,19 +20,26 @@ namespace DBDG
   
     void beginBatch(Texture *texture);
     void endBatch() const;
-    
-    void drawSprite(const float &center_x, const float &center_y, const float &width, const float &height, const TextureRegion *region);
-    void drawSprite(const float &center_x, const float &center_y, const float &width, const float &height, const float &angle, const TextureRegion *region);
-  
-    void drawSprite(const Vector2 &center, const Vector2 &size, const TextureRegion *region)
-    {
-      drawSprite(center.x, center.y, size.x, size.y, region);
-    }
-  
-    void drawSprite(const Vector2 &center, const Vector2 &size, const float &angle, const TextureRegion *region)
-    {
-      drawSprite(center.x, center.y, size.x, size.y, angle, region);
-    }    
+
+    void clearSprites();
+    void drawAllSprites(const Texture *texture) const;
+
+    void pushSprite(const float &center_x, const float &center_y, const float &width, const float &height, const TextureRegion *region);
+    void pushSprite(const Vector2 &center, const Vector2 &size, const TextureRegion *region);
+    void pushSprite(const float &center_x, const float &center_y, const float &width, const float &height, const float &angle, const TextureRegion *region);
+    void pushSprite(const Vector2 &center, const Vector2 &size, const float &angle, const TextureRegion *region);
   };
+
+  inline void SpriteBatcher::pushSprite(const Vector2 &center, const Vector2 &size, const TextureRegion *region)
+  {
+    pushSprite(center.x, center.y, size.x, size.y, region);
+  }  
+
+  inline void SpriteBatcher::pushSprite(const Vector2 &center, const Vector2 &size, const float &angle, const TextureRegion *region)
+  {
+    pushSprite(center.x, center.y, size.x, size.y, angle, region);
+  }    
 }
+
+
 #endif

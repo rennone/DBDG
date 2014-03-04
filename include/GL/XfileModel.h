@@ -66,6 +66,8 @@ namespace DBDG
     void readMeshNormal(FILE *fp, std::vector<Vector3> &normal, std::vector<int> &indexis);
     void readTexCoord(FILE *fp, std::vector<UV> &uv);
     void readMeshMaterialList(FILE *fp, std::vector<int> &indexis);
+
+    void bindVBO(const unsigned int bufferId, const Texture *texture) const;
   };
 }
 

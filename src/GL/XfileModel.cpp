@@ -1,11 +1,12 @@
 #include <GL/XfileModel.h>
 #include <GL/GLTexture.h>
+#include <GL/glDBDG.h>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <Color4.hpp>
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <GL/glDBDG.h>
-#include <GL/freeglut.h>
-#include <Color4.hpp>
 
 namespace DBDG
 {
@@ -310,37 +311,37 @@ namespace DBDG
         j+=5;//次のポリゴンの頂点数が格納されている添字
       }
     }
-/*    
+
 //VBO化して,GPUに置いておく
-for ( int i=0; i<materials.size(); i++)
-{
-glGenBuffers(1, &materials[i].bufferId);
-    
-//頂点
-glBindBuffer(GL_ARRAY_BUFFER, materials[i].bufferId);
-glBufferData(GL_ARRAY_BUFFER, materials[i].meshes.size()*sizeof(Mesh)
-, (GLfloat*)&materials[i].meshes[0], GL_STATIC_DRAW);
-    
-glBindBuffer(GL_ARRAY_BUFFER, 0); 
-}
-*/
+    for ( int i=0; i<materials.size(); i++)
+    {
+      glGenBuffers(1, &materials[i].bufferId);
+      glBindBuffer(GL_ARRAY_BUFFER, materials[i].bufferId);
+      glBufferData(GL_ARRAY_BUFFER, materials[i].meshes.size()*sizeof(Mesh), (GLfloat*)&materials[i].meshes[0], GL_STATIC_DRAW);    
+      glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    }
+
     return;
   }
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
-  void XfileModel::render() const
+  inline static void setMaterialColor(const Color4 &ambient, const Color4 &diffuse, const Color4 &specular, const float &shininess)
   {
-    
+    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT , (const GLfloat*)&ambient);
+    glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE , (const GLfloat*)&diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, (const GLfloat*)&specular);
+    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS, shininess);
   }
-//描画
-  void XfileModel::renderWithAlpha(const float &alpha) const
+
+  inline static void setMaterialColor(Color4 ambient, Color4 diffuse, Color4 specular, const float &shininess, const float &alpha)
   {
-    glPushAttrib( GL_COLOR_MATERIAL |
-                  GL_CURRENT_BIT |
-                  GL_ENABLE_BIT |
-                  GL_COLOR_BUFFER_BIT |
-                  GL_TEXTURE_BIT);
+    ambient.a = diffuse.a = specular.a = alpha;
+    setMaterialColor(ambient, diffuse, specular, shininess);
+  }
+
+  inline static void beginRender()
+  {
+    glPushAttrib( GL_COLOR_MATERIAL   | GL_CURRENT_BIT | GL_ENABLE_BIT |
+                  GL_COLOR_BUFFER_BIT | GL_TEXTURE_BIT);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glEnable(GL_ALPHA_TEST); //アルファテスト開始
@@ -348,57 +349,11 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
+  }
 
-    for(auto mat : materials)
-    {
-      //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
-      if ( mat.meshes.size() <= 0 )
-        continue;
-
-      //アルファ値の変更があるかもしれないので, 一旦別の変数に代入
-      auto ambient = mat.ambient;
-      auto diffuse = mat.diffuse;
-      auto specular = mat.specular;
-      
-      ambient.a = diffuse.a = specular.a = alpha;
-
-      glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT , (const GLfloat*)&ambient);
-      glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE , (const GLfloat*)&diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, (const GLfloat*)&specular);
-      glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS, mat.shininess);
-
-      /*
-      //VBO使うタイプ
-      glBindBuffer(GL_ARRAY_BUFFER, mat.bufferId);
-      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(0));
-      glNormalPointer(GL_FLOAT,sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)));
-      */
-      //VBO使わないタイプ
-      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].vertex.x);
-      glNormalPointer(GL_FLOAT,sizeof(Mesh), (GLfloat*)&mat.meshes[0].normal.x);
-    
-      //テクスチャの設定
-      if(mat.texture != NULL)
-      {
-        mat.texture->bind();
-
-        //VBO使うタイプ
-        //glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)+sizeof(Vector3)));
-        //VBO使わないタイプ
-        glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].uv.u);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);    
-      }
-      else
-      {
-        glDisable(GL_TEXTURE_2D);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      }
-    
-      glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
-    }  
-
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  inline static void endRender()
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -406,81 +361,109 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
     glPopAttrib();  
   }
 
-  void XfileModel::renderWithColor4(const Color4 &color4) const
+  #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
+  
+  inline void XfileModel::bindVBO(const unsigned int bufferId, const Texture *texture) const
   {
+    //VBO使うタイプ
+    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+    glVertexPointer(3, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(0));
+    glNormalPointer(GL_FLOAT,sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)));
+
+    //テクスチャの設定
+    if(texture != NULL)
+    {
+      texture->bind();
+      glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)+sizeof(Vector3)));        
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);    
+    }
+    else
+    {
+      glDisable(GL_TEXTURE_2D);
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+  }
+  
+  void XfileModel::render() const
+  {
+    beginRender();    
+    for(auto mat : materials)
+    {
+      //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
+      if ( mat.meshes.size() <= 0 )
+        continue;
+
+      setMaterialColor(mat.ambient, mat.diffuse, mat.specular, mat.shininess);
+
+      bindVBO(mat.bufferId, mat.texture);
+      
+      glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
+    }
+    endRender();    
+  }
+  
+//描画
+  void XfileModel::renderWithAlpha(const float &alpha) const
+  {
+    beginRender();
+    
+    for(auto mat : materials)
+    {
+      //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
+      if ( mat.meshes.size() <= 0 )
+        continue;
+
+      setMaterialColor(mat.ambient, mat.diffuse, mat.specular, mat.shininess, alpha);
+
+      bindVBO(mat.bufferId, mat.texture);
+      
+      glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
+    }
+    endRender();
+  }
+
+  void XfileModel::renderWithColor4(const Color4 &color) const
+  {
+  beginRender();  
+  
+  for(auto mat : materials)
+  {
+  //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
+  if ( mat.meshes.size() <= 0 )
+    continue;
+
+  setMaterialColor(color, color, color, mat.shininess);
+//  setMaterialColor(mat.ambient+color, mat.diffuse+color, mat.specular+color, mat.shininess);
+
+  bindVBO(mat.bufferId, mat.texture);
+  glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
+}
+  endRender();
   }
   
   void XfileModel::renderWithColor3(const Color3 &color3) const
   {
-    glPushAttrib( GL_COLOR_MATERIAL |
-                  GL_CURRENT_BIT |
-                  GL_ENABLE_BIT |
-                  GL_COLOR_BUFFER_BIT |
-                  GL_TEXTURE_BIT);  
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glEnable(GL_ALPHA_TEST); //アルファテスト開始
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  beginRender();  
+    const Color4 color(color3.r, color3.g, color3.b, 0);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-
-    Color4 color(color3.r, color3.g, color3.b, 0);
-  
     for(auto mat : materials)
     {
       //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
       if ( mat.meshes.size() <= 0 )
         continue;
+      setMaterialColor(color, color, color, mat.shininess);
+//      setMaterialColor(mat.ambient+color, mat.diffuse+color, mat.specular+color, mat.shininess);
 
-      //アルファ値の変更があるかもしれないので, 一旦別の変数に代入
-      auto ambient  = mat.ambient + color;
-      auto diffuse  = mat.diffuse + color;
-      auto specular = mat.specular + color;
-
-      glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT , (const GLfloat*)&ambient);
-      glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE , (const GLfloat*)&diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, (const GLfloat*)&specular);
-      glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS, mat.shininess);
-
-      /*
-      //VBO使うタイプ
-      glBindBuffer(GL_ARRAY_BUFFER, mat.bufferId);
-      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(0));
-      glNormalPointer(GL_FLOAT,sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)));
-      */
-      //VBO使わないタイプ
-      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].vertex.x);
-      glNormalPointer(GL_FLOAT,sizeof(Mesh), (GLfloat*)&mat.meshes[0].normal.x);
-    
-      //テクスチャの設定
-      if(mat.texture != NULL)
-      {
-        mat.texture->bind();
-
-        //VBO使うタイプ
-        //glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)+sizeof(Vector3)));
-        //VBO使わないタイプ
-        glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].uv.u);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);    
-      }
-      else
-      {
-        glDisable(GL_TEXTURE_2D);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      }
-    
+  bindVBO(mat.bufferId, mat.texture);
       glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
-    }  
-
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    glPopAttrib();  
+    }
+  endRender();
   }
+  
   void XfileModel::dispose()
   {
     for (unsigned int i=0; i<materials.size(); i++ )
@@ -491,3 +474,32 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
     materials.clear();
   }
 }
+
+/*       
+      //VBO使うタイプ
+      glBindBuffer(GL_ARRAY_BUFFER, mat.bufferId);
+      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(0));
+      glNormalPointer(GL_FLOAT,sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)));
+      
+      //VBO使わないタイプ
+      glVertexPointer(3, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].vertex.x);
+      glNormalPointer(GL_FLOAT,sizeof(Mesh), (GLfloat*)&mat.meshes[0].normal.x);
+    
+      //テクスチャの設定
+      if(mat.texture != NULL)
+      {
+        mat.texture->bind();
+
+        //VBO使うタイプ
+        //glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), BUFFER_OFFSET(sizeof(Vector3)+sizeof(Vector3)));
+        //VBO使わないタイプ
+        glTexCoordPointer(2, GL_FLOAT, sizeof(Mesh), (GLfloat*)&mat.meshes[0].uv.u);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);    
+      }
+      else
+      {
+        glDisable(GL_TEXTURE_2D);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+      }
+    
+*/

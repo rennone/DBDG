@@ -1,16 +1,8 @@
-#include <GL/GLGame.h>
-#include <GL/GLInput.h>
-#include <GL/GLAudio.h>
-#include <GL/GLScene.h>
 #include <iostream> //エラー吐き出し用
 
 //glfw glewの mac用の設定
 #define GLFW_NO_GLU
-#include <GL/GL/glew.h>
-#include <GL/GLFW/glfw3.h>
-//#include <OpenGL/glext.h>
-//#include <OpenGL/gl3ext.h>
-#include <GL/GL/glut.h>
+#include <GL/glDBDG.h>
 
 namespace
 {
@@ -69,7 +61,7 @@ namespace DBDG
     elapsedTime_sec[1] = glfwGetTime();
 
     //windowを生成
-    auto _monitor = is_fullscreen ? glfwGetPrimaryMonitor() : NULL;  
+    auto _monitor = is_fullscreen ? glfwGetPrimaryMonitor() : NULL;
     window = glfwCreateWindow(window_width, window_height, window_title.c_str(), _monitor, NULL);  
     if(!window)
     {
@@ -81,7 +73,8 @@ namespace DBDG
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this); //このwindowにコールバック用にインプットを登録
 
-if( glewInit() != GLEW_OK )
+    //glewはglfwMakeContextCurrentの後でなければならないらしい
+    if( glewInit() != GLEW_OK )
     {
       std::cerr << "cannot start glew" << std::endl;
       exit(2);
@@ -148,7 +141,7 @@ if( glewInit() != GLEW_OK )
     glfwTerminate();  
     exit(EXIT_SUCCESS);
   };
-
+  
   void GLGame::replaceScene()
   {
     if(nextScene != NULL)

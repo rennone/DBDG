@@ -17,14 +17,13 @@ namespace DBDG
   public:
     SpriteBatcher3D(int _maxSprites);
     ~SpriteBatcher3D();  
-  
-    void beginBatch(Texture *texture);
-  
-    void drawSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const TextureRegion *region);
-    void drawSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const float &angle, const TextureRegion *region);
-//自分で,上と横野軸ベクトルを指定してから,描画できる
-    void drawSprite(const Vector3 position, const Vector3 &rightAxis, const Vector3 &upAxis, const Vector2 &size, const TextureRegion *region);
-    void endBatch() const;
+
+    
+    void clearSprites();    
+    void pushSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const TextureRegion *region);    
+    void pushSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const float &angle, const TextureRegion *region);
+    void pushSprite(const Vector3 position, const Vector3 &rightAxis, const Vector3 &upAxis, const Vector2 &size, const TextureRegion *region);//自分で,上と横野軸ベクトルを指定してから,描画できる
+    void drawAllSprites(const Texture *texture) const;
   };
 }
 #endif

@@ -28,28 +28,29 @@ namespace DBDG
     delete indicesBuffer;  
   }
 
-  void SpriteBatcher3D::beginBatch(Texture *texture)
+  void SpriteBatcher3D::clearSprites()
   {  
-    glEnable(GL_TEXTURE_2D);
-    texture->bind();  
     numSprite=0;
     bufferIndex=0;
   }
 
-  void SpriteBatcher3D::endBatch() const
-  {  
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-  
-    glVertexPointer(3,  GL_FLOAT, 5*sizeof(float), verticesBuffer  );
-    glTexCoordPointer(2,GL_FLOAT, 5*sizeof(float), verticesBuffer+3);
-  
-    glDrawElements(GL_TRIANGLES, 6*numSprite, GL_UNSIGNED_INT, indicesBuffer);
+  void SpriteBatcher3D::drawAllSprites(const Texture *texture) const
+  {
+    glPushAttrib(GL_TEXTURE_BIT | GL_ENABLE_BIT);
+    glEnable(GL_TEXTURE_2D);
+    texture->bind();
 
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);  
+    glVertexPointer(3,  GL_FLOAT, 5*sizeof(float), verticesBuffer  );
+    glTexCoordPointer(2,GL_FLOAT, 5*sizeof(float), verticesBuffer+3);  
+    glDrawElements(GL_TRIANGLES, 6*numSprite, GL_UNSIGNED_INT, indicesBuffer);
     glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glPopAttrib();
   }
 
-  void SpriteBatcher3D::drawSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const TextureRegion *region)
+    void SpriteBatcher3D::pushSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const TextureRegion *region)
   {
     //画像の上方向を表すベクトル(これがそのまま上方向になる訳ではない)
     Vector3 up;
@@ -100,7 +101,7 @@ namespace DBDG
     numSprite++;  
   }
 
-  void SpriteBatcher3D::drawSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const float &angle, const TextureRegion *region)
+  void SpriteBatcher3D::pushSprite(const Vector3 position, const Vector3 &normal, const Vector2 &size, const float &angle, const TextureRegion *region)
   {
     Vector3 up;
     //通常はy軸が画像の上, 画像が上か下を向いている時はz軸が画像の上
@@ -180,7 +181,7 @@ namespace DBDG
     numSprite++;  
   }
 
-  void SpriteBatcher3D::drawSprite(const Vector3 position, const Vector3 &rightAxis, const Vector3 &upAxis, const Vector2 &size, const TextureRegion *region)
+  void SpriteBatcher3D::pushSprite(const Vector3 position, const Vector3 &rightAxis, const Vector3 &upAxis, const Vector2 &size, const TextureRegion *region)
   {
     Vector3 axis1 = rightAxis.normalizedVector();
     Vector3 axis2 = upAxis.normalizedVector();
@@ -218,4 +219,5 @@ namespace DBDG
     verticesBuffer[bufferIndex++] = region->v1;
     numSprite++;  
   }
+
 }

@@ -27,6 +27,7 @@ endif(NOT GLUT_FOUND)
 find_package(OPENGL)
 include_directories(${OPENGL_INCLUDE_DIRS})
 link_directories(${OPENGL_LIBRARY_DIRS})
+
 if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
@@ -48,4 +49,5 @@ target_link_libraries(${Project} django)
 #file(GLOB libSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp)
 #add_library(django STATIC ${libSrc})
 #target_link_libraries(django ${OPENGL_LIBRARY} ${GLUT_LIBRARY} glfw3 ${GLEW_LIBRARY} m)
+
 

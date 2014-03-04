@@ -1,17 +1,17 @@
-#include <GLFW/glfw3.h>
 #include <GL/SpriteBatcher.h>
+#include <GLFW/glfw3.h>
 #include <cmath>
 
 namespace DBDG
 {
-  SpriteBatcher::SpriteBatcher(int _maxSprites)
+  SpriteBatcher::SpriteBatcher(int max_sprites)
   {
-    verticesBuffer = new float[_maxSprites*4*4]; //x,y,t,u * 4点
-    indicesBuffer = new unsigned int[_maxSprites*6]; // 1面あたり6点
+    verticesBuffer = new float[max_sprites*4*4]; //x,y,t,u * 4点
+    indicesBuffer = new unsigned int[max_sprites*6]; // 1面あたり6点
     bufferIndex = 0;
     numSprite = 0;
 
-    int len = _maxSprites*6;
+    int len = max_sprites*6;
     for(int i=0, j=0; i<len; i+=6, j+=4)
     {
       indicesBuffer[i+0] = (j+0);
@@ -29,16 +29,18 @@ namespace DBDG
     delete indicesBuffer;  
   }
 
-  void SpriteBatcher::beginBatch(Texture *texture)
-  {  
-    glEnable(GL_TEXTURE_2D);
-    texture->bind();  
+  void SpriteBatcher::clearSprites()
+  {
     numSprite=0;
     bufferIndex=0;
   }
 
-  void SpriteBatcher::endBatch() const
-  {  
+  void SpriteBatcher::drawAllSprites(const Texture* texture) const
+  {
+    glPushAttrib(GL_TEXTURE_BIT | GL_ENABLE_BIT);
+    glEnable(GL_TEXTURE_2D);
+    texture->bind();
+    
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   
@@ -47,13 +49,13 @@ namespace DBDG
   
     glDrawElements(GL_TRIANGLES, 6*numSprite, GL_UNSIGNED_INT, indicesBuffer);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);  
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glPopAttrib();
   }
-
-
-  void SpriteBatcher::drawSprite(const float &x, const float &y, const float &width,const float &height, const TextureRegion *region)
+  
+  void SpriteBatcher::pushSprite(const float &x, const float &y, const float &width,const float &height, const TextureRegion *region)
   {
     float halfWidth  = width/2.0;
     float halfHeight = height/2.0;
@@ -86,12 +88,12 @@ namespace DBDG
     numSprite++;
   }
 
-  void SpriteBatcher::drawSprite
+  void SpriteBatcher::pushSprite
   (const float &x, const float &y, const float &width, const float &height, const float &angle, const TextureRegion *region)
   {
     float halfWidth  = width/2;
     float halfHeight = height/2;
-    float rad = angle * M_PI / 180.0;
+    float rad = angle * Vector2::TO_RADIANS;
     float _cos = cos(rad);
     float _sin = sin(rad);
 
@@ -129,5 +131,4 @@ namespace DBDG
 
     numSprite++;
   }
-
 }
