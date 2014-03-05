@@ -8,20 +8,11 @@
 #include <string>
 #include <cstring>
 
-namespace DBDG
-{
-  XfileModel::XfileModel(const std::string &fileName,const float &size)
-    :Model(fileName)
-  {
-    load(fileName, size);
-  }
-
-  XfileModel::~XfileModel()
-  {
-    dispose();
-  }
-
-  static std::string spliter(std::string str) 
+namespace
+{  
+  std::string SuperiorFolder;
+  
+  std::string spliter(std::string str) 
   {
     int p = 0; 
     std::string res;
@@ -34,7 +25,7 @@ namespace DBDG
     return res;
   }
 
-  static void skipBrackets(FILE *fp)
+  void skipBrackets(FILE *fp)
   {
     char buf[255];
     // '}'がくるまで飛ばす
@@ -43,7 +34,21 @@ namespace DBDG
 
     fgets(buf,sizeof(buf),fp);
   }
+}
 
+namespace DBDG
+{
+  XfileModel::XfileModel(const std::string &fileName,const float &size)
+    :Model(fileName)
+  {
+    load(fileName, size);
+  }
+
+  XfileModel::~XfileModel()
+  {
+    dispose();
+  }
+  
 //マテリアルの読み込み
   void XfileModel::readMaterial(FILE *fp)
   {
@@ -84,7 +89,7 @@ namespace DBDG
 
       //textureListに無ければ追加
       if(textureList.find(texName) == textureList.end())
-        textureList[texName] = new GLTexture(texName);
+        textureList[texName] = new GLTexture(SuperiorFolder + texName);
 
       mtl.texture = textureList[texName];
     }
@@ -237,8 +242,10 @@ namespace DBDG
     //Xファイルを開いて内容を読み込む
     FILE* fp=NULL;
 
-    //リソースへのパスは""
-    std::string name = getPathToResource() + fileName;
+    //fileNameをディレクトリ込みで渡した場合, 上位ディレクトリを取得しておく
+    SuperiorFolder = getSuperiorFolderPath(fileName);
+
+    std::string name = getCurrentDirectory() + fileName;
   
     if( (fp = fopen(name.c_str(), "rt")) == NULL)
     {

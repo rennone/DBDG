@@ -44,11 +44,14 @@ namespace
 namespace DBDG
 {  
   GLGame::GLGame
-  (std::string window_title, int window_width, int window_height, bool is_fullscreen)
+  (int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen)
     :scene(NULL), nextScene(NULL)
   {
-    int argc = 0;
-    glutInit(&argc, NULL); //コマンドライン引数はNULLにする.    
+    
+    if(argc > 0)
+      Resource::setCurrentDirectory(Resource::getSuperiorFolderPath(argv[0]));
+    
+    glutInit(&argc, argv);
   
     glfwSetErrorCallback(error_callback);
     if(!glfwInit())

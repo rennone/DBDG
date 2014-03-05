@@ -21,7 +21,7 @@ namespace DBDG
     std::vector<unsigned char> raw_image;
     unsigned int width, height;
 
-    std::string name = getPathToResource()+fileName;  
+    std::string name   = Resource::getCurrentDirectory() + fileName;  
     unsigned int error = lodepng::decode(raw_image, width, height, name.c_str());   
   
     if(error != 0)

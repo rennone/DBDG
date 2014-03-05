@@ -2,6 +2,9 @@
 #include <math/Vector3.hpp>
 #include <math/Vector2.hpp>
 
+#include <iostream>
+using namespace std;
+
 static void LightSetting()
 {
   glEnable(GL_LIGHTING);    
@@ -54,9 +57,9 @@ public:
     camera3D= new DBDG::Camera3D(game->getWindow(),DBDG::Vector3(500,500,500), DBDG::Vector3(0,0,0), 1, 1000, 120);
     batcher = new DBDG::SpriteBatcher(10);
     batcher3D = new DBDG::SpriteBatcher3D(10);
-    texture = new DBDG::GLTexture("fieldAtlas.png");
+    texture = new DBDG::GLTexture("resource/fieldAtlas.png");
     region  = new DBDG::TextureRegion(texture, 0, 0, 128, 128);
-    model   = new DBDG::XfileModel("gargoyle.x", 3);
+    model   = new DBDG::XfileModel("resource/gargoyle/gargoyle.x", 3);
     LightSetting();    
   }
   
@@ -88,10 +91,9 @@ public:
 class TestGame : public DBDG::GLGame
 {
 public :
-  TestGame(const std::string title, const int window_widht, const int window_height)
-    :GLGame(title, window_widht, window_height, false)
+  TestGame(int argc, char **argv, const std::string title, const int window_widht, const int window_height)
+    :GLGame(argc, argv, title, window_widht, window_height, false)
   {
-    DBDG::Resource::setPathToResource("resource/");
     scene = getStartScene();
   }
   
@@ -101,9 +103,10 @@ public :
   }
 };
 
-int main()
-{
-  TestGame game("test", 640, 320);
+
+int main(int argc, char** argv)
+{ 
+  TestGame game(argc, argv, "test", 640, 320);
   glClearColor(1.0, 1.0, 0.0, 1.0);
   game.loop();
 

@@ -24,8 +24,8 @@ namespace DBDG
     void replaceScene();  //次のシーンがあれば入れ替える
 
   public:
-    GLGame(std::string window_title, int window_width, int window_height, bool is_fullscreen=false);
-    GLGame(std::string window_title);
+    GLGame(int argc, char **argv, std::string window_title);
+    GLGame(int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen=false);
     virtual ~GLGame();
     void loop();
     bool setScene(Scene *scene);
