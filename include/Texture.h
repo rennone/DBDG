@@ -31,10 +31,10 @@ namespace DBDG
     const float u2, v2;
     const float ratio; // width/height;
   
-  TextureRegion(const Texture *_texture,const float center_x,const float center_y,const float width,const float height)
+  TextureRegion(const Texture *_texture,const float left,const float top,const float width,const float height)
     :texture(_texture),
-      u1(        1.0*center_x/_texture->getWidth()), v1(          1.0*center_y/_texture->getHeight()),
-      u2(1.0*(center_x+width)/_texture->getWidth()), v2( 1.0*(center_y+height)/_texture->getHeight()), ratio(width/height)
+      u1(        1.0*left/_texture->getWidth()), v1(          1.0*top/_texture->getHeight()),
+      u2(1.0*(left+width)/_texture->getWidth()), v2( 1.0*(top+height)/_texture->getHeight()), ratio(width/height)
     { }
 
   TextureRegion(const Texture *_texture)

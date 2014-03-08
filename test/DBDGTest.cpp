@@ -3,6 +3,7 @@
 #include <math/Vector2.hpp>
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 static void LightSetting()
@@ -39,31 +40,36 @@ static void LightSetting()
 class TestScene : public DBDG::GLScene
 {
   DBDG::Camera2D *camera;
-  DBDG::Camera3D *camera3D;
-  
+  DBDG::Camera3D *camera3D;  
   DBDG::SpriteBatcher *batcher;
-  DBDG::SpriteBatcher3D *batcher3D;
-  
+  DBDG::SpriteBatcher3D *batcher3D;  
   DBDG::GLTexture *texture;
   DBDG::TextureRegion *region;
-
   DBDG::XfileModel *model;
-
+  DBDG::GLFont *font;
+  float elapsedTime;
 public:
   TestScene(DBDG::GLGame *game)
     :DBDG::GLScene(game)
+    ,elapsedTime(0)
   {
     camera  = new DBDG::Camera2D(game->getWindow(), 640, 320);
     camera3D= new DBDG::Camera3D(game->getWindow(),DBDG::Vector3(500,500,500), DBDG::Vector3(0,0,0), 1, 1000, 120);
-    batcher = new DBDG::SpriteBatcher(10);
-    batcher3D = new DBDG::SpriteBatcher3D(10);
+    batcher = new DBDG::SpriteBatcher(50);
+    batcher3D = new DBDG::SpriteBatcher3D(50);
     texture = new DBDG::GLTexture("resource/fieldAtlas.png");
     region  = new DBDG::TextureRegion(texture, 0, 0, 128, 128);
     model   = new DBDG::XfileModel("resource/gargoyle/gargoyle.x", 3);
-    LightSetting();    
+
+    auto bitmap = new DBDG::GLTexture("resource/bitmapFont.png");
+    font = new DBDG::GLFont(bitmap, batcher, batcher3D, /*left = */0, /*top = */0, /* glyphPerRow*/10, 51.2, 51.2);
+    LightSetting();
   }
   
-  void update(float deltaTime){ }
+  void update(float deltaTime)
+  {
+    elapsedTime += deltaTime;
+  }
 
   void render(float deltaTime)
   {
@@ -75,11 +81,10 @@ public:
     glPushMatrix();
     camera3D->setViewportAndMatrices();
     model->renderWithColor4(DBDG::Color4(1,0,0, 0.5));
-    /*
-    batcher3D->clearSprites();
-    batcher3D->pushSprite( DBDG::Vector3(0,0,0), camera3D->getPosition()-camera3D->getLook() , DBDG::Vector2(500,500), region);
-    batcher3D->drawAllSprites(texture);
-    */
+
+    auto dir = camera3D->getPosition() - camera3D->getLook();
+    dir.z = 0;
+    font->drawString3D("Hello", DBDG::Vector3(0,0,0), dir , 500, 250*sin(elapsedTime), DBDG::Color4(1,0,1,1), DBDG::Font::ALIGNMENT_CENTER);
     glPopMatrix();
   }
 
@@ -94,7 +99,6 @@ public :
   TestGame(int argc, char **argv, const std::string title, const int window_widht, const int window_height)
     :GLGame(argc, argv, title, window_widht, window_height, false)
   {
-    scene = getStartScene();
   }
   
   DBDG::Scene* getStartScene()
@@ -103,10 +107,11 @@ public :
   }
 };
 
-
 int main(int argc, char** argv)
-{ 
+{
   TestGame game(argc, argv, "test", 640, 320);
+  game.setScene(game.getStartScene());
+  
   glClearColor(1.0, 1.0, 0.0, 1.0);
   game.loop();
 

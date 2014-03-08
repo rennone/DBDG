@@ -28,6 +28,12 @@ if(NOT GLUT_FOUND)
        message(ERROR " GLUT not found!")
 endif(NOT GLUT_FOUND)
 
+#ALUTはfindpackageで見つからなかったので, 手打ち
+set(ALUT_INCLUDE_DIR /usr/local/opt/freealut/include)
+set(ALUT_LIBRARY_DIR /usr/local/opt/freealut/lib)
+include_directories(${ALUT_INCLUDE_DIR})
+link_directories(${ALUT_LIBRARY_DIR})
+
 #aboud OpenGL
 find_package(OPENGL)
 include_directories(${OPENGL_INCLUDE_DIRS})

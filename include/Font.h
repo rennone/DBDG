@@ -7,20 +7,18 @@
 
 namespace DBDG
 {
-  class Font : public Resource
+  class Font
   {
-  protected:
-    std::string fileName;
-    virtual void load(std::string file_name) = 0;
-  
   public:
-  Font(std::string file_name)
-    :Resource(file_name)
+    enum Alignment
     {
-      
-    }
-    ~Font() { }      
-    virtual void drawString(const Vector2 &point, std::string str) const = 0;
+      ALIGNMENT_LEFT,
+      ALIGNMENT_RIGHT,
+      ALIGNMENT_CENTER,      
+    };
+    
+    Font() { }
+    ~Font() { }
   };
 }
 #endif
