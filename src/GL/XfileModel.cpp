@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-
+#include <Resource.h>
 namespace
 {  
   std::string SuperiorFolder;
@@ -243,9 +243,9 @@ namespace DBDG
     FILE* fp=NULL;
 
     //fileNameをディレクトリ込みで渡した場合, 上位ディレクトリを取得しておく
-    SuperiorFolder = getSuperiorFolderPath(fileName);
+    SuperiorFolder = Resource::getSuperiorFolderPath(fileName);
 
-    std::string name = getCurrentDirectory() + fileName;
+    std::string name = Resource::getCurrentDirectory() + fileName;
   
     if( (fp = fopen(name.c_str(), "rt")) == NULL)
     {
@@ -454,20 +454,20 @@ namespace DBDG
   void XfileModel::renderWithColor3(const Color3 &color3) const
   {
   beginRender();  
-    const Color4 color(color3.r, color3.g, color3.b, 0);
 
-    for(auto mat : materials)
-    {
-      //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
-      if ( mat.meshes.size() <= 0 )
-        continue;
-      setMaterialColor(color, color, color, mat.shininess);
-//      setMaterialColor(mat.ambient+color, mat.diffuse+color, mat.specular+color, mat.shininess);
+  const Color4 color(color3.r, color3.g, color3.b, 1);
+  for(auto mat : materials)
+  {
+  //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
+  if ( mat.meshes.size() <= 0 )
+    continue;
+  
+  setMaterialColor(color, color, color, mat.shininess);
 
   bindVBO(mat.bufferId, mat.texture);
-      glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
-    }
+  glDrawArrays(GL_TRIANGLES, 0, mat.meshes.size());
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);    
+}
   endRender();
   }
   

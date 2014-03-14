@@ -15,19 +15,22 @@ namespace DBDG
 
   class GLGame: public Game
   {
+    static void error_callback(int error, const char* description);
+    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void mouseCallback(GLFWwindow* window, int button, int action, int mods);
+    static void scrollCallback(GLFWwindow* window, double offsetX, double offsetY);
+    static void resize_callback(GLFWwindow* window, int width, int height);
   protected:
     GLFWwindow *window;
     GLInput *input;
     GLAudio *audio;
     Scene *scene,*nextScene;
-    float elapsedTime_sec[2];
     void replaceScene();  //次のシーンがあれば入れ替える
-
   public:
     GLGame(int argc, char **argv, std::string window_title);
     GLGame(int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen=false);
     virtual ~GLGame();
-    void loop();
+    void loop(const float &delta_time_sec);
     bool setScene(Scene *scene);
     Input* const getInput() const;
     Audio* const getAudio()  const; 

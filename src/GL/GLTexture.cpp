@@ -3,6 +3,7 @@
 #include <lodepng.h>
 #include <vector>
 #include <cstdlib>
+#include <Resource.h>
 
 namespace DBDG
 {

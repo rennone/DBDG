@@ -5,14 +5,18 @@
 #include <GL/KeyboardHandler.h>
 #include <GL/ScrollHandler.h>
 
+//シングルトン用のマクロ
+#define g_KeyboardHandler KeyboardHandler::getInstance()
+
 namespace DBDG
 {
   GLInput::GLInput(GLFWwindow* window)
     :window(window)
   {
-    mouseHandler    = std::unique_ptr<MouseHandler>(new MouseHandler(window));
-keyboardHandler = std::unique_ptr<KeyboardHandler>(new KeyboardHandler());
-scrollHandler   = std::unique_ptr<ScrollHandler>(new ScrollHandler());
+//    g_KeyboardHandler = std::unique_ptr<KeyboardHandler>(new KeyboardHandler());
+    mouseHandler    = std::unique_ptr<MouseHandler>(new MouseHandler(window));    
+    scrollHandler   = std::unique_ptr<ScrollHandler>(new ScrollHandler());
+
   }
   
   GLInput::~GLInput()
@@ -21,29 +25,29 @@ scrollHandler   = std::unique_ptr<ScrollHandler>(new ScrollHandler());
 
   void GLInput::update()
   {
-    keyboardHandler->update();
+    g_KeyboardHandler->update();
     mouseHandler->update();
     scrollHandler->update();
   }
 
   bool GLInput::isAnyKeyPressed() const
   {
-    return keyboardHandler->isAnyKeyPressed();
+    return g_KeyboardHandler->isAnyKeyPressed();
   }
 
   bool GLInput::isKeyPressed(const int &key_code) const
   {
-    return keyboardHandler->isKeyPressed(key_code);
+    return g_KeyboardHandler->isKeyPressed(key_code);
   }
 
   int GLInput::getKeyState(const int &key_code) const
   {
-    return keyboardHandler->getKeyState(key_code);
+    return g_KeyboardHandler->getKeyState(key_code);
   }
 
-const std::vector<KeyEvent*>& GLInput::getKeyEvents() const
+  const std::vector<KeyEvent*>& GLInput::getKeyEvents() const
   {
-    return keyboardHandler->getKeyEvents();
+    return g_KeyboardHandler->getKeyEvents();
   }
 
   const MouseEvent* const GLInput::getMouseEvent() const
@@ -71,7 +75,7 @@ const std::vector<KeyEvent*>& GLInput::getKeyEvents() const
 
   void GLInput::onKeyCallback(const int &keyCode, const int &action, const int &mods)
   {
-    keyboardHandler->onEvent(keyCode, action, mods);
+    g_KeyboardHandler->onEvent(keyCode, action, mods);
   }
 
   void GLInput::onScrollCallback(const double &offsetX,const double &offsetY)

@@ -1,28 +1,40 @@
-#ifndef DBDG_RESOURCE_H
-#define DBDG_RESOURCE_H
+#infndef DBDG_FILE_IO_H
+#define DBDG_FILE_IO_H
 
 #include <string>
 namespace DBDG
 {
   //リソースフォルダへのパスを保持するクラス
-  class Resource
+  class FileIO 
   {
-    std::string fileName;    
-
+    std::string rootDirectory;
+    
     static std::string& CurrentDirectory()
     {
       static std::string dir = "";
       return dir;    
     }
 
-    Resource(const Resource &other);
-    Resource& operator=(const Resource &other);
-  protected :    
-    Resource(std::string file_name)
-      :fileName(file_name)
-    {  }
-
+    FileIO(const std::string &root_directory)
+      :
+    {
+      
+    }
+    
+    FileIO(const Resource &other);
+    FileIO& operator=(const Resource &other);
   public:
+    static FileIO* getInstance()
+    {
+      FileIO instance;
+      return &instance;
+    }
+
+    FILE* openFile(const std::string file_name)
+    {
+      return NULL; 
+    }
+    
     static void setCurrentDirectory(std::string path)
     {
       CurrentDirectory() = path;
@@ -40,7 +52,11 @@ namespace DBDG
         return "";
       else
         return str.substr(0, index+1); //0からindex文字とってくる.
-    }    
+    }
+
+    
   };
 }
+
+
 #endif

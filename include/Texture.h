@@ -1,17 +1,18 @@
 #ifndef DBDG_TEXTURE_H
 #define DBDG_TEXTURE_H
 
-#include "Resource.h"
+#include <string>
 namespace DBDG
 {
-  class Texture : public Resource
+  class Texture
   {
   protected:
+    std::string fileName;
     unsigned int width;  //pixel size (must be power of 2)
     unsigned int height;
   public:
   Texture(const std::string &file_name)
-    :Resource(file_name)
+    :fileName(file_name)
     { }
     
     virtual ~Texture(){ }

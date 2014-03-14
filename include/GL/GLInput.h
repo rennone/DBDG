@@ -18,15 +18,17 @@ namespace DBDG
   {
     friend class GLGame;  
     GLFWwindow  *window;
+
     
     std::unique_ptr<MouseHandler>      mouseHandler;
-    std::unique_ptr<KeyboardHandler>   keyboardHandler;
+    //std::unique_ptr<KeyboardHandler>   keyboardHandler;
     std::unique_ptr<ScrollHandler>     scrollHandler;
+    
 //    std::unique_ptr<LeapMotionHandler> leapMotionHandler;
-  
+
   public:
     GLInput(GLFWwindow *window);  
-    ~GLInput();
+    ~GLInput();  
 
     void update();    
     bool isAnyKeyPressed() const;
@@ -37,7 +39,7 @@ namespace DBDG
     const ScrollEvent* const getScrollEvent() const;
     Vector2 getCursorPos() const;
 
-//イベント発生時に呼ばれる
+    //イベント発生時にGameクラスから呼ばれる
     void onMouseCallback(const int &button,const int &action,const int &mods);
     void onKeyCallback(const int &keyCode,const int &action,const int &mods);
     void onScrollCallback(const double &offsetX,const double &offsetY);

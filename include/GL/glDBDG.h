@@ -1,6 +1,7 @@
 #ifndef DBDG_GL_DBDG_H
 #define DBDG_GL_DBDG_H
 
+#include "GLDirector.h"
 #include "GLGame.h"
 #include "GLScene.h"
 #include "GLInput.h"

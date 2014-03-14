@@ -38,11 +38,25 @@ link_directories(${GLEW_LIBRARY_DIRS})
 find_package(GLFW)
 link_directories(${GLFW_LIBRARY_DIRS})
 
+
+find_package(OPENAL)
+link
+# freeAlut
+link_directories(/usr/local/opt/freealut/include)
+
+find_package(OPENAL)
+include_directories(${OPENAL_INCLUDE_DIRS})
+link_directories(${OPENAL_LIBRARY_DIRS})
+
 include_directories(~/git/DBDG/include)
 link_directories(~/git/DBDG/lib)
 
 add_executable(${Project} ${srcFile})
 target_link_libraries(${Project} ${OPENGL_LIBRARY} ${GLUT_LIBRARY} ${GLFW_LIBRARY} ${GLEW_LIBRARY} m)
+
+#alutを先にリンクしないといけない
+target_link_libraries(${Project} alut ${OPENAL_LIBRARY})
+
 target_link_libraries(${Project} django)
 
 #デバッグ用に, テスト側でライブラリをコンパイル

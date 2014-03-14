@@ -4,7 +4,7 @@
 
 namespace DBDG
 {
-  Camera3D::Camera3D(GLFWwindow *window, float frustum_near, float frustum_far, float frustum_FOVY)
+  Camera3D::Camera3D(GLFWwindow *window, const float &frustum_near, const float &frustum_far, const float &frustum_FOVY)
     :window(window)
     ,position(Vector3(0,0,0))
     ,look(Vector3(0,0,1))
@@ -18,7 +18,8 @@ namespace DBDG
     viewportY = viewportHeight/2;
   }
   
-  Camera3D::Camera3D(GLFWwindow *window, Vector3 position, Vector3 look, float frustum_near, float frustum_far, float frustum_FOVY)
+  Camera3D::Camera3D(GLFWwindow *window, const Vector3 &position, const Vector3 &look
+                     ,const float &frustum_near, const float &frustum_far, const float &frustum_FOVY)
     :window(window)
     ,position(position)
     ,look(look)
@@ -101,7 +102,8 @@ namespace DBDG
 
     return screen;
   }
-  
+
+  /*
   //todo perspectiveかどっちかに間違いがある->glutで用意されている方を使う
   void Camera3D::perspective() const
   {
@@ -147,4 +149,5 @@ namespace DBDG
     glMultMatrixf(&m[0][0]);
     glTranslated(-position.x, -position.y, -position.z);
   }
+  */
 }

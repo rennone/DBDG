@@ -17,8 +17,8 @@ namespace DBDG
     virtual Scene* const getCurrentScene() const = 0;
     
     virtual bool setScene(Scene *scene)=0; //bool : 切り替えが成功したか否か(1ループで複数のシーンがセットされないように)
-    virtual void loop()=0; //ゲームスタート
-  protected:
+    
+    virtual void loop(const float &delta_time)=0; //ゲームスタート
     virtual Scene* getStartScene() = 0;   //コンストラクタから一番始めに一回だけ呼び出される todo protectedにすべき?
   };
   

@@ -1,7 +1,6 @@
 #ifndef DBDG_MODEL_H
 #define DBDG_MODEL_H
 
-#include "Resource.h"
 #include "Texture.h"
 #include "Color3.hpp"
 #include "Color4.hpp"
@@ -9,14 +8,15 @@
 
 namespace DBDG
 {
-  class Model: public Resource
+  class Model
   {
   protected:
+    std::string fileName;
     Texture *texture;
     
   public:
   Model(const std::string &file_name)
-    :Resource(file_name){  }
+    :fileName(file_name){  }
     virtual ~Model(){  }  
     virtual void render() const = 0;
     virtual void renderWithAlpha(const float &alpha) const = 0;
@@ -26,4 +26,5 @@ namespace DBDG
     virtual void dispose() = 0;
   };
 }
+
 #endif

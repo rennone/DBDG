@@ -1,4 +1,6 @@
 #include <GL/glDBDG.h>
+#include <GL/GLDirector.h>
+#include <GL/Tools/SimpleGLFunction.h>
 #include <math/Vector3.hpp>
 #include <math/Vector2.hpp>
 
@@ -37,10 +39,85 @@ static void LightSetting()
   glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightdir4); 
 }
 
+class CameraManager
+{
+  DBDG::Camera3D *camera;
+  DBDG::GLGame *game;
+public:
+  CameraManager(DBDG::Camera3D *camera, DBDG::GLGame *game)
+    :camera(camera)
+    ,game(game)
+  {
+    
+  }
+
+  void update(const float &deltaTime)
+  {
+    auto events = game->getInput()->getKeyEvents();
+
+    const float speed = 500.0f*deltaTime;
+    int dx=0, dy=0, dz=0;
+    for( auto it=events.begin(); it!=events.end(); it++)
+    {
+      if( (*it)->action == GLFW_RELEASE)
+        continue;
+
+      if( (*it)->keyCode == GLFW_KEY_UP )
+      {
+        dy += 10;
+      }
+
+      if( (*it)->keyCode == GLFW_KEY_DOWN )
+      {
+        dy -= 10;
+      }
+
+      if( (*it)->keyCode == GLFW_KEY_LEFT )
+      {
+        dx -= 10;
+      }
+
+      if( (*it)->keyCode == GLFW_KEY_RIGHT )
+      {
+        dx += 10;
+      }
+
+      if( (*it)->keyCode == GLFW_KEY_W )
+      {
+        dz -= 10;
+      }
+
+      if( (*it)->keyCode == GLFW_KEY_S )
+      {
+        dz += 10;
+      }
+      
+    }
+
+    if( dx|dy|dz )
+      translate(dx*speed, dy*speed, dz*speed);
+  }
+
+  void translate(const float &dx, const float &dy, const float &dz)
+  {
+    auto axisZ = camera->getLook() - camera->getPosition();
+    axisZ.normalize();
+    auto axisX = axisZ.cross(camera->getUp());
+    axisX.normalize();
+    auto axisY = axisX.cross(axisZ);
+
+    auto move = dx*axisX + dy*axisY + dz*axisZ;
+
+    camera->setLook(camera->getLook()+move);
+    camera->setPosition(camera->getPosition()+move);
+  }
+};
+  
 class TestScene : public DBDG::GLScene
 {
   DBDG::Camera2D *camera;
-  DBDG::Camera3D *camera3D;  
+  DBDG::Camera3D *camera3D;
+  CameraManager *cameraMgr;
   DBDG::SpriteBatcher *batcher;
   DBDG::SpriteBatcher3D *batcher3D;  
   DBDG::GLTexture *texture;
@@ -54,7 +131,7 @@ public:
     ,elapsedTime(0)
   {
     camera  = new DBDG::Camera2D(game->getWindow(), 640, 320);
-    camera3D= new DBDG::Camera3D(game->getWindow(),DBDG::Vector3(500,500,500), DBDG::Vector3(0,0,0), 1, 1000, 120);
+    camera3D= new DBDG::Camera3D(game->getWindow(),DBDG::Vector3(500,500,500), DBDG::Vector3(0,0,0), 1, 3000, 90);
     batcher = new DBDG::SpriteBatcher(50);
     batcher3D = new DBDG::SpriteBatcher3D(50);
     texture = new DBDG::GLTexture("resource/fieldAtlas.png");
@@ -63,15 +140,18 @@ public:
 
     auto bitmap = new DBDG::GLTexture("resource/bitmapFont.png");
     font = new DBDG::GLFont(bitmap, batcher, batcher3D, /*left = */0, /*top = */0, /* glyphPerRow*/10, 51.2, 51.2);
+
+    cameraMgr = new CameraManager(camera3D, game);
     LightSetting();
   }
   
-  void update(float deltaTime)
+  void update(const float &deltaTime)
   {
     elapsedTime += deltaTime;
+    cameraMgr->update(deltaTime);
   }
 
-  void render(float deltaTime)
+  void render(const float &deltaTime)
   {
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -80,11 +160,13 @@ public:
 
     glPushMatrix();
     camera3D->setViewportAndMatrices();
-    model->renderWithColor4(DBDG::Color4(1,0,0, 0.5));
+    DBDG::dbdgDrawGrid(100, 20, 20);
+    DBDG::dbdgDrawAxis(1000);
+    model->renderWithColor4(DBDG::Color4(1,0,0,1));
 
     auto dir = camera3D->getPosition() - camera3D->getLook();
     dir.z = 0;
-    font->drawString3D("Hello", DBDG::Vector3(0,0,0), dir , 500, 250*sin(elapsedTime), DBDG::Color4(1,0,1,1), DBDG::Font::ALIGNMENT_CENTER);
+    font->drawString3D("Hello", DBDG::Vector3(0,0,0), dir , 500, 170, DBDG::Color4(1,0,1,1), DBDG::Font::ALIGNMENT_CENTER);
     glPopMatrix();
   }
 
@@ -109,11 +191,8 @@ public :
 
 int main(int argc, char** argv)
 {
-  TestGame game(argc, argv, "test", 640, 320);
-  game.setScene(game.getStartScene());
-  
-  glClearColor(1.0, 1.0, 0.0, 1.0);
-  game.loop();
-
+  TestGame *game = new TestGame(argc, argv, "test", 640, 480);
+  glClearColor(0.0, 0.0, 0.0, 1.0);
+  DBDG::GLDirector::startGame(game);
   return 0;
 }

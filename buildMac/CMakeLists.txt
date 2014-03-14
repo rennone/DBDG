@@ -7,8 +7,8 @@ set(Project django)
 PROJECT(${Project})
 
 #c++0x対応オプション
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS")
 set(CMAKE_CXX_FLAGS "-std=c++0x") 
 
 set(CMAKE_BUILD_TYPE release)
@@ -43,8 +43,10 @@ if(NOT OPENGL_FOUND)
 endif(NOT OPENGL_FOUND)
 
 #cppファイルをまとめて, Projetへリンク
-file(GLOB libSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp)
-add_library(${Project} STATIC ${libSrc})
+file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp)
+file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp)
+file(GLOB glUtilSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/util/*.cpp)
+add_library(${Project} STATIC ${glSrc} ${alSrc} ${glUtilSrc})
 
 # error OpenGLとかを, django一つにまとめられない
 target_link_libraries(${Project} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} glfw3 GLEW m)

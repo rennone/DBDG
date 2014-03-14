@@ -25,10 +25,17 @@ namespace DBDG
     std::vector<KeyEvent*> keyEvents;
     std::vector<KeyEvent*> keyEventBuffer;
     mutable pthread_mutex_t lock;
-  
-  public:  
     KeyboardHandler();
+    KeyboardHandler(const KeyboardHandler& other);
+    KeyboardHandler& operator=(const KeyboardHandler &other);
+  public:
+    static KeyboardHandler* getInstance()
+    {
+      static KeyboardHandler instance;
+      return &instance;
+    }
     ~KeyboardHandler();
+    
     bool isAnyKeyPressed();
     bool isKeyPressed(int keyCode);  
     int getKeyState(int keyCode);
