@@ -1,5 +1,5 @@
+#include <GL/glDBDG.h>
 #include <GL/SpriteBatcher3D.h>
-#include <GLFW/glfw3.h>
 
 namespace DBDG
 {

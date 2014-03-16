@@ -1,6 +1,5 @@
+#include <GL/glDBDG.h>
 #include <GL/Camera3D.h>
-#include <GL/freeglut.h>
-#include <GLFW/glfw3.h>
 
 namespace DBDG
 {

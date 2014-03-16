@@ -166,6 +166,7 @@ namespace DBDG
       return this->x*other.y - this->y*other.x;
     }
 
+    //radianで返る
     float angleTo(const Vector2 &other) const
     {
       //thisとotherとの角度(otherがthisより反時計回りだと正)

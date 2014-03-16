@@ -1,3 +1,4 @@
+#include <GL/util/glDBDGUtil.h>
 #include <GL/util/ThirdPersonCamera.h>
 #include <algorithm>
 #include <cmath>
@@ -67,26 +68,20 @@ namespace DBDG
       setLook(person->getPosition());
     }
 
-    void ThirdPersonCamera::rollYaw(const int &deg)
+    void ThirdPersonCamera::rotate(const int &delta_yaw, const int &delta_pitch)
     {
-      yaw += deg;
-      if(yaw < 0)
-        yaw+=360;
-
-      if(yaw>360)
-        yaw-=360;
+      yaw += delta_yaw;
+      if(yaw < 0)       yaw+=360;
+      else if(yaw>360)  yaw-=360;
+      
+      pitch += delta_pitch;
+      pitch = std::min(maxPitch, std::max(minPitch, pitch));      
     }
-
-    void ThirdPersonCamera::rollPitch(const int &deg)
-    {
-      pitch += deg;
-      pitch = fmin(maxPitch, fmax(minPitch, pitch));
-    }
-
+    
     void ThirdPersonCamera::zoom(const int &deg)
     {
       radius += deg;
-      radius = fmin(maxRadius, fmax(minRadius, radius));
+      radius = std::min(maxRadius, std::max(minRadius, radius));
     }
   }
 }

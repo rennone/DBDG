@@ -1,5 +1,6 @@
+#include <GL/util/glDBDGUtil.h>
 #include <GL/util/Actor.h>
-#include <GL/GLGame.h>
+
 namespace DBDG
 {
   namespace Util

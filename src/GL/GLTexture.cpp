@@ -1,5 +1,6 @@
-#include <GLFW/glfw3.h>
+#include <GL/glDBDG.h>
 #include <GL/GLTexture.h>
+
 #include <lodepng.h>
 #include <vector>
 #include <cstdlib>

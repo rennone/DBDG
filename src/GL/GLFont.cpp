@@ -1,8 +1,6 @@
-#include <GLFW/glfw3.h>
-#include <GL/GLFont.h>
-#include <GL/SpriteBatcher.h>
-#include <GL/SpriteBatcher3D.h>
 #include <Texture.h>
+#include <GL/glDBDG.h>
+#include <GL/GLFont.h>
 
 namespace DBDG
 {

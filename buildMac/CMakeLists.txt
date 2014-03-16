@@ -12,13 +12,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS")
 set(CMAKE_CXX_FLAGS "-std=c++0x") 
 
 set(CMAKE_BUILD_TYPE release)
-
 set(serial "1.0.0")
 
 include_directories("../include")
 
-link_directories("~/git/DBDG/buildMac/glew/lib")
-link_directories("~/git/DBDG/buildMac/glfw3/lib")
+#GLEW GLFWのリンク
+link_directories("GLFW/lib")
+link_directories("GLEW/lib")
+link_directories("GLUT/lib")
+link_directories("ALUT/lib")
 
 # macにはGLUTがデフォルトとで入っているのでそっちを使う
 find_package(GLUT)
@@ -42,14 +44,16 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
+
 #cppファイルをまとめて, Projetへリンク
-file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp)
-file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp)
+file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp) #AL関連のファイル
+file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp) #GL関連
 file(GLOB glUtilSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/util/*.cpp)
 add_library(${Project} STATIC ${glSrc} ${alSrc} ${glUtilSrc})
 
-# error OpenGLとかを, django一つにまとめられない
-target_link_libraries(${Project} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} glfw3 GLEW m)
+# TODO OpenGLとかを, django一つにまとめられない => DLLをスタティックにリンクしてない???
+target_link_libraries(${Project} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} glfw3 GLEW alut m)
 
 install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
 

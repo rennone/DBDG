@@ -1,5 +1,5 @@
+#include <GL/util/glDBDGUtil.h>
 #include <GL/util/SimpleGLFunction.h>
-#include <GL/GL/glut.h>
 
 namespace DBDG
 {

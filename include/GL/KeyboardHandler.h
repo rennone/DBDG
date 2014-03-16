@@ -4,7 +4,7 @@
 #include "../Pool.h"
 #include "../Input.h"
 #include <vector>
-#include <pthread.h>
+#include <mutex>
 
 namespace DBDG
 {  
@@ -24,7 +24,7 @@ namespace DBDG
     Pool<KeyEvent> *keyEventPool;
     std::vector<KeyEvent*> keyEvents;
     std::vector<KeyEvent*> keyEventBuffer;
-    mutable pthread_mutex_t lock;
+    mutable std::mutex mtx_lock;
     KeyboardHandler();
     KeyboardHandler(const KeyboardHandler& other);
     KeyboardHandler& operator=(const KeyboardHandler &other);

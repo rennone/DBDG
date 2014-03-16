@@ -1,5 +1,5 @@
+#include <GL/util/glDBDGUtil.h>
 #include <GL/util/CameraManager.h>
-#include <GL/glDBDG.h>
 
 namespace DBDG
 {
@@ -24,34 +24,37 @@ namespace DBDG
     {
       auto input = glGame->getInput();
 
+      int delta_yaw = 0, delta_pitch = 0;
       if(input->getKeyState(yawRightRollKey) != GLFW_RELEASE)
-        camera->rollYaw(-1*rotateSpeed);
+        delta_yaw -= rotateSpeed;
       
       if(input->getKeyState(yawLeftRollKey) != GLFW_RELEASE)
-        camera->rollYaw(1*rotateSpeed);
+        delta_yaw += rotateSpeed;
 
       if(input->getKeyState(pitchUprollKey) != GLFW_RELEASE)
-        camera->rollPitch(1*rotateSpeed);
+        delta_pitch += rotateSpeed;
 
       if(input->getKeyState(pitchDownrollKey) != GLFW_RELEASE)
-        camera->rollPitch(-1*rotateSpeed);
+        delta_pitch -= rotateSpeed;
 
+      camera->rotate(delta_yaw, delta_pitch);
+
+      
       if(input->getKeyState(zoomInKey) != GLFW_RELEASE)
         camera->zoom(-1*zoomSpeed);
       
       if(input->getKeyState(zoomOutKey) != GLFW_RELEASE)
-        camera->zoom(1*zoomSpeed);
-
+        camera->zoom(1*zoomSpeed);      
+      
       if(canMouseControl)
       {
-        const auto const mouseEvent = input->getMouseEvent();
+        const auto mouseEvent = input->getMouseEvent();
         if(mouseEvent->action != GLFW_RELEASE)
         {
           const auto mousePos = Vector2(mouseEvent->x, mouseEvent->y);
           static auto touchPrev = mousePos;        
           auto dir = touchPrev - mousePos;
-          camera->rollPitch(dir.y);
-          camera->rollYaw(dir.x);
+          camera->rotate(dir.x, dir.y);
           touchPrev = mousePos;
         }
       }

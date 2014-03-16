@@ -23,13 +23,8 @@ namespace DBDG
   class Graphic
   {
   public:
-    static Graphic& getInstance()
-    {
-      static Graphic instance;
-      return instance;
-    }    
-    virtual TextureManager& const getTextureManager() const = 0;
-    virtual ModelManager& const getModelManager() const = 0;
+    virtual TextureManager* const getTextureManager() const = 0;
+    virtual ModelManager* const getModelManager() const = 0;
   };  
 }
 

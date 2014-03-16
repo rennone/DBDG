@@ -1,9 +1,7 @@
 #ifndef DBDG_MOUSE_HANDLER_H
 #define DBDG_MOUSE_HANDLER_H
 
-
-#include <pthread.h>
-
+#include <mutex>
 struct GLFWwindow;
 namespace DBDG
 {
@@ -13,7 +11,7 @@ namespace DBDG
     //TODO use smart pointer
     GLFWwindow *window;    
     MouseEvent *mouseEvent, *mouseEventBuffer;
-    mutable pthread_mutex_t lock;
+    mutable std::mutex mtx_lock;
   public:
     MouseHandler(GLFWwindow *window);  
     ~MouseHandler();  

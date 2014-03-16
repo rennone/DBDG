@@ -1,9 +1,12 @@
-
+/*
 #include <GLFW/glfw3.h>
 #include <GL/GLInput.h>
 #include <GL/MouseHandler.h>
 #include <GL/KeyboardHandler.h>
 #include <GL/ScrollHandler.h>
+*/
+#include <GL/glDBDG.h>
+#include <GL/GLInput.h>
 
 //シングルトン用のマクロ
 #define g_KeyboardHandler KeyboardHandler::getInstance()

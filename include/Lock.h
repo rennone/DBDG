@@ -1,10 +1,10 @@
 #ifndef DBDG_LOCK_H
 #define DBDG_LOCK_H
 
+/*
 //スレッドのロック, アンロックをするクラス
 //pthreadで実装
 #include <pthread.h>
-
 namespace DBDG
 {
   class Lock
@@ -24,6 +24,7 @@ namespace DBDG
       pthread_mutex_unlock(mtx);    
     }
   };
-
 }
+*/
+
 #endif

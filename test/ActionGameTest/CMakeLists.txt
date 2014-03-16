@@ -12,10 +12,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Wall -pedantic -O2")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
 set(CMAKE_CXX_FLAGS "-std=c++0x")
 
-
 set(CMAKE_BUILD_TYPE release)
 
-#about GLUT
+#About GLUT
 find_package(GLUT)
 include_directories(${GLUT_INCLUDE_DIRS})
 link_directories(${GLUT_LIBRARY_DIRS})
@@ -50,7 +49,7 @@ include_directories(~/git/DBDG/include)
 link_directories(~/git/DBDG/lib)
 
 add_executable(${Project} ${srcFile})
-target_link_libraries(${Project} ${OPENGL_LIBRARY} ${GLUT_LIBRARY} ${GLFW_LIBRARY} ${GLEW_LIBRARY} m)
+target_link_libraries(${Project} ${OPENGL_LIBRARY}  ${GLUT_LIBRARY} ${GLFW_LIBRARY} ${GLEW_LIBRARY} m)
 target_link_libraries(${Project} alut ${OPENAL_LIBRARY})
 target_link_libraries(${Project} django)
 

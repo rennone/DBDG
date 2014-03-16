@@ -1,7 +1,7 @@
 #ifndef DBDG_SCROLL_HANDLER_H
 #define DBDG_SCROLL_HANDLER_H
 
-#include <pthread.h>
+#include <mutex>
 
 namespace DBDG
 {
@@ -9,7 +9,7 @@ namespace DBDG
   class ScrollHandler
   {
     ScrollEvent *scrollEvent, *scrollEventBuffer;
-    mutable pthread_mutex_t lock;
+    mutable std::mutex mtx_lock;
   public:
     ScrollHandler();
     ~ScrollHandler();  

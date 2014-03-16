@@ -1,10 +1,9 @@
-#include <GL/GLDirector.h>
-#include <GL/GLGame.h>
-
 #ifdef DBDG_MAC_OS
 #define GLFW_NO_GLU
-#include <GL/glDBDG.h>
 #endif
+
+#include <GL/glDBDG.h>
+#include <GL/GLDirector.h>
 
 namespace DBDG
 {

@@ -1,7 +1,7 @@
-
-#include <GLFW/glfw3.h>
+#include <Input.h>
+#include <GL/glDBDG.h>
 #include <GL/KeyboardHandler.h>
-#include <Lock.h>
+
 namespace DBDG
 {
   KeyboardHandler::KeyboardHandler()
@@ -14,8 +14,6 @@ namespace DBDG
 
     keyEvents.reserve(maxKeyEvent);
     keyEventBuffer.reserve(maxKeyEvent);
-  
-    pthread_mutex_init(&lock, NULL);
   }
   
   KeyboardHandler::~KeyboardHandler()
@@ -25,7 +23,8 @@ namespace DBDG
 
   bool KeyboardHandler::isAnyKeyPressed()
   {
-    Lock lck(&lock);
+    std::lock_guard<std::mutex> lock(mtx_lock);
+
     for(auto event : keyEvents)
     {
       if(event->action == GLFW_PRESS)
@@ -37,7 +36,8 @@ namespace DBDG
   
   bool KeyboardHandler::isKeyPressed(int keyCode)
   {
-    Lock lck(&lock); //ロック
+    std::lock_guard<std::mutex> lock(mtx_lock);
+    
     if(keyCode < 0 || keyCode>=keyMapSize)
       return false;
   
@@ -46,7 +46,8 @@ namespace DBDG
 
   int KeyboardHandler::getKeyState(int keyCode)
   {
-    Lock lck(&lock);  
+    std::lock_guard<std::mutex> lock(mtx_lock);
+
     if(keyCode < 0 || keyCode>=keyMapSize)
       return GLFW_KEY_UNKNOWN;
   
@@ -56,13 +57,14 @@ namespace DBDG
 //ループの最初に一回だけ呼び出す
   const std::vector<KeyEvent*>& KeyboardHandler::getKeyEvents()
   {
-    Lock lck(&lock); //ロック デストラクタでアンロックする  
+    std::lock_guard<std::mutex> lock(mtx_lock);
+    
     return keyEvents; 
   }
   
   void KeyboardHandler::onEvent(const int &keyCode,const int &action,const int &mods)
   {
-    Lock lck(&lock); //ロック
+    std::lock_guard<std::mutex> lock(mtx_lock);
   
     //KeyEventで定義している定数ががGLFWの定数と同じなのでそのまま代入
     KeyEvent *event = keyEventPool->newObject();
@@ -75,7 +77,7 @@ namespace DBDG
 
   void KeyboardHandler::update()
   {
-    Lock lck(&lock); //ロック デストラクタでアンロックする        
+    std::lock_guard<std::mutex> lock(mtx_lock);    
 
     for(auto event : keyEvents)
       keyEventPool->freeObject(event);

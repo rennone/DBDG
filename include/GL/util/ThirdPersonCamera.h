@@ -23,13 +23,15 @@ namespace DBDG
       int getRadius() const { return radius; }
       int getYaw() const { return yaw; }
       int getPitch() const { return pitch; }
-      void zoom(const int &deg);
+
       void setPitchLimit(const int &minPitch, const int &maxPitch);
       void setRadiusLimit(const int &minRadius, const int &maxRadius);
       void calcLocalPosition();
       void update(const float &delta_time_sec);
-      void rollYaw(const int &deg);
-      void rollPitch(const int &deg);
+
+      void rotate(const int &delta_yaw, const int &delta_pitch);
+      void zoom(const int &deg);
+      
       Character* const getTargetCharacter() { return person; }
     };
   }

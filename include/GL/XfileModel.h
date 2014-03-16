@@ -9,7 +9,6 @@
 #include "../math/Vector3.hpp"
 #include "../Color4.hpp"
 #include "../Color3.hpp"
-//#include <GL/glut.h>
 
 namespace DBDG
 {

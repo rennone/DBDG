@@ -1,12 +1,13 @@
-#include "PlayScene.h"
-#include "Assets.h"
 #include <GL/util/glDBDGUtil.h>
 #include <GL/GLFW/glfw3.h>
+#include "PlayScene.h"
+#include "Assets.h"
+#include "CameraManager.h"
+#include "QuarterViewCamera.h"
 
 using DBDG::Util::Actor;
 using DBDG::Util::HasPosition;
-using DBDG::Util::CameraManager;
-using DBDG::Util::ThirdPersonCamera;
+
 static void LightSetting()
 {
   glEnable(GL_LIGHTING);
@@ -39,10 +40,13 @@ static void LightSetting()
 
 class Player : public  DBDG::Util::Character
 {
+  const DBDG::Vector2 initDirection;
 public:
-  Player(DBDG::GLGame *glGame, const DBDG::Vector3 &position, const DBDG::Vector3 &direction)
-    :DBDG::Util::Character(glGame, position, direction)
-  { 
+  Player(DBDG::GLGame *glGame, const DBDG::Vector3 &position)
+    :DBDG::Util::Character(glGame, position, DBDG::Vector3(0,0,0))
+    ,initDirection(0,-1)
+  {
+    direction.set(initDirection.x, 0, initDirection.y);
   }
   
   void update(const float &delta_time_sec)
@@ -58,23 +62,30 @@ public:
   
   void render(const float &delta_time_sec)
   {
+    float rad = -initDirection.angleTo(DBDG::Vector2(direction.x, direction.z));
     glPushMatrix();
     glTranslated(position.x, position.y, position.z);
-    Assets::gargoyle->render();
+    glRotated(rad*DBDG::Vector2::TO_DEGREE, 0, 1, 0);
+    Assets::gargoyle->renderWithColor3(DBDG::Color3(1,0,0));
     glPopMatrix();
   }
 };
 
 class PlayerManager : public DBDG::Util::Actor
 {
-  Player* const player;
-  CameraManager* const cameraMgr;  
+  Player* player;
+  CameraManager* cameraMgr;  
 public:
-  PlayerManager(DBDG::GLGame *glGame, Player* player, CameraManager *cameraMgr)
+  PlayerManager(DBDG::GLGame *glGame)
     :DBDG::Util::Actor(glGame)
-    ,player(player)
-    ,cameraMgr(cameraMgr)
   {
+    player = new Player(glGame, DBDG::Vector3(0,0,0));
+    
+//    auto camera = new ThirdPersonCamera(glGame->getWindow() , DBDG::Vector3(500,500,500),
+//                                        DBDG::Vector3(0,0,0), 1, 3000, 90, player);
+    auto camera = new QuarterViewCamera(glGame->getWindow());
+    cameraMgr = new CameraManager(glGame, camera);
+    cameraMgr->changeTarget(player);
     addChild(player);
     addChild(cameraMgr);
   }
@@ -83,25 +94,42 @@ public:
   {  
     auto input = glGame->getInput();
     const float speed = 500*delta_time_sec;
-    
+
+    auto direction = DBDG::Vector3(0,0,0);
+
+    auto dirZ = cameraMgr->getCamera()->getLook() - cameraMgr->getCamera()->getPosition();
+    dirZ.y = 0;
+
+    auto dirX = dirZ.cross(cameraMgr->getCamera()->getUp());
+    bool isMoved = false;
     if(input->getKeyState(GLFW_KEY_UP) != GLFW_RELEASE)
     {
-      auto direction = cameraMgr->getCamera()->getLook() - cameraMgr->getCamera()->getPosition();
-      direction.y = 0;
-      player->move(direction, speed);
+      direction += dirZ;
+      isMoved = true;
     }
-
     if(input->getKeyState(GLFW_KEY_DOWN) != GLFW_RELEASE)
     {
-      auto direction = -(cameraMgr->getCamera()->getLook() - cameraMgr->getCamera()->getPosition());
-      direction.y = 0;
-      player->move(direction, speed);
+      direction -= dirZ;
+      isMoved = true;
     }
+    if(input->getKeyState(GLFW_KEY_RIGHT) != GLFW_RELEASE)
+    {
+      direction += dirX;
+      isMoved = true;
+    }
+    if(input->getKeyState(GLFW_KEY_LEFT) != GLFW_RELEASE)
+    {
+      direction -= dirX;
+      isMoved = true;
+    }
+
+    if(isMoved)
+      player->move(direction, speed);    
     
     Actor::update(delta_time_sec);
   }
 
-  ThirdPersonCamera* getCamera() const
+  DBDG::Camera3D* getCamera() const
   {
     return cameraMgr->getCamera();
   }
@@ -111,14 +139,8 @@ PlayScene::PlayScene(DBDG::GLGame *glGame)
   :DBDG::GLScene(glGame)
   ,elapsedTime_sec(0)
 {
-  auto player = new Player(glGame, DBDG::Vector3(0,0,0), DBDG::Vector3(0,0,1));
-  auto camera = new ThirdPersonCamera(glGame->getWindow(),
-                                      DBDG::Vector3(500,500,500),
-                                      DBDG::Vector3(0,0,0),
-                                      1, 3000, 90, player);
-  
-  auto cameraMgr = new CameraManager(glGame, camera);
-  playerMgr = new PlayerManager(glGame, player, cameraMgr);
+
+  playerMgr = new PlayerManager(glGame);
   
   root = new Actor(glGame);
   root->addChild(playerMgr);
@@ -147,10 +169,9 @@ void PlayScene::update(const float &delta_time_sec)
 
 void PlayScene::render(const float &delta_time_sec)
 {
-//  camera3D->setViewportAndMatrices();
   playerMgr->getCamera()->setViewportAndMatrices();
   DBDG::dbdgDrawGrid(100, 80, 80);
   DBDG::dbdgDrawAxis(1000);
-//  Assets::gargoyle->render();
+
   root->render(delta_time_sec);
 }

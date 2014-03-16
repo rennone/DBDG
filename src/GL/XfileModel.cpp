@@ -1,8 +1,5 @@
-#include <GL/XfileModel.h>
-#include <GL/GLTexture.h>
 #include <GL/glDBDG.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <GL/XfileModel.h>
 #include <Color4.hpp>
 #include <iostream>
 #include <string>

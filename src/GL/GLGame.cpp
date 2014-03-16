@@ -1,10 +1,10 @@
 #include <iostream> //エラー吐き出し用
 
 //glfw glewの mac用の設定
-#define GLFW_NO_GLU
 #include <GL/glDBDG.h>
-
 #include <AL/AL/alut.h>
+
+#include <GL/GLGame.h>
 
 namespace DBDG
 {
