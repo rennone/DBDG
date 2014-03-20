@@ -8,12 +8,12 @@ namespace DBDG
   class GLModelManager : public ModelManager
   {
   public:
-    GLModelManager* getInstance()
+    static GLModelManager* getInstance()
     {
       static GLModelManager instance;
       return &instance;
     }
-    Model* newModel(const string &file_name);
+    Model* newModel(const std::string &file_name, const float &scale);
   private:
     GLModelManager(){}
     GLModelManager( const GLModelManager &other);

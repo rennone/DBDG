@@ -4,7 +4,8 @@
 #include "../glDBDG.h" //glew.hをglut.hの前にincludeするとエラーになるのでそれ対策
 #include "Actor.h"
 #include "HasPosition.h"
-#include "ThirdPersonCamera.h"
+#include "Movable.h"
+#include "QuarterViewCamera.h"
 #include "CameraManager.h"
 #include "SimpleGLFunction.h"
 

@@ -1,6 +1,8 @@
 #ifndef DBDG_GRAPHICS_H
 #define DBDG_GRAPHICS_H
 
+#include <string>
+
 namespace DBDG
 {
   class Texture;
@@ -10,14 +12,14 @@ namespace DBDG
   {
   public:
     virtual ~TextureManager(){}
-    Texture* newTexture(const string &file_name);
+    Texture* newTexture(const std::string &file_name);
   };
   
   class ModelManager
   {
   public:
-    virutal ~ModelManager(){}
-    Model* newModel(const string &file_name);
+    virtual ~ModelManager(){}
+    Model* newModel(const std::string &file_name, const float &scale);
   };
   
   class Graphic

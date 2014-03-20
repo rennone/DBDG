@@ -1,9 +1,7 @@
 #include <GL/util/glDBDGUtil.h>
-#include <GL/GLFW/glfw3.h>
 #include "PlayScene.h"
 #include "Assets.h"
 #include "CameraManager.h"
-#include "QuarterViewCamera.h"
 
 using DBDG::Util::Actor;
 using DBDG::Util::HasPosition;
@@ -38,12 +36,12 @@ static void LightSetting()
   glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightdir4); 
 }
 
-class Player : public  DBDG::Util::Character
+class Player : public  DBDG::Util::Movable
 {
   const DBDG::Vector2 initDirection;
 public:
   Player(DBDG::GLGame *glGame, const DBDG::Vector3 &position)
-    :DBDG::Util::Character(glGame, position, DBDG::Vector3(0,0,0))
+    :DBDG::Util::Movable(glGame, position, DBDG::Vector3(0,0,0))
     ,initDirection(0,-1)
   {
     direction.set(initDirection.x, 0, initDirection.y);
@@ -83,7 +81,7 @@ public:
     
 //    auto camera = new ThirdPersonCamera(glGame->getWindow() , DBDG::Vector3(500,500,500),
 //                                        DBDG::Vector3(0,0,0), 1, 3000, 90, player);
-    auto camera = new QuarterViewCamera(glGame->getWindow());
+    auto camera = new DBDG::Util::QuarterViewCamera(glGame->getWindow());
     cameraMgr = new CameraManager(glGame, camera);
     cameraMgr->changeTarget(player);
     addChild(player);

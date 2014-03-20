@@ -7,17 +7,17 @@ namespace DBDG
 {
   namespace Util
   {
-    class Character : public HasPosition
+    class Movable : public HasPosition
     {
     protected:
       Vector3 direction;
     public:
-      Character(GLGame *glGame, const Vector3 &position, const Vector3 &direction)
+      Movable(GLGame *glGame, const Vector3 &position, const Vector3 &direction)
         :HasPosition(glGame, position)
         ,direction(direction)
       {
       }
-      virtual ~Character(){}
+      virtual ~Movable(){}
 
       Vector3 getDirection() const { return direction; }
       void setDirection(const Vector3 &direction) { this->direction = direction; }

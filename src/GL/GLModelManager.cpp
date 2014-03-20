@@ -3,9 +3,9 @@
 
 namespace DBDG
 {
-  Model* GLModelManager::newModel(const std::string &file_name)
+  Model* GLModelManager::newModel(const std::string &file_name, const float &scale)
   {
-  return new XfileModel(file_name);
+    return new XfileModel(file_name, scale);
 }
   
 }

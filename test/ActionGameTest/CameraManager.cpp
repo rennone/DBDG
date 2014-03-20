@@ -1,9 +1,9 @@
 #include <GL/glDBDG.h>
 #include <GL/Util/glDBDGUtil.h>
 #include "CameraManager.h"
-#include "QuarterViewCamera.h"
 
-CameraManager::CameraManager(DBDG::GLGame *glGame, QuarterViewCamera *camera)
+
+CameraManager::CameraManager(DBDG::GLGame *glGame, DBDG::Util::QuarterViewCamera *camera)
   :Actor(glGame),camera(camera),target(NULL),doTraceTarget(false)
 {
   setStatus(DBDG::Util::Actor::UpdateOnly);
@@ -21,7 +21,7 @@ CameraManager::CameraManager(DBDG::GLGame *glGame, QuarterViewCamera *camera)
   mouseRotateSensitivity = 2.0f;
 }
 
-void CameraManager::changeTarget(DBDG::Util::Character *target)
+void CameraManager::changeTarget(DBDG::Util::Movable *target)
 {
   if(target != NULL)
     this->target = target;

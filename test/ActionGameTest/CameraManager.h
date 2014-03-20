@@ -5,25 +5,26 @@
 
 namespace DBDG{
   namespace Util{
-    class Character;
+    class QuarterViewCamera;
+    class Movable;
   }
 }
 
-class QuarterViewCamera;
+
 class CameraManager : public DBDG::Util::Actor
 {
-  QuarterViewCamera *camera;
-  DBDG::Util::Character *target; //todo we must use smart pointer
+  DBDG::Util::QuarterViewCamera *camera;
+  DBDG::Util::Movable *target; //todo we must use smart pointer
   int upKey, downKey, rightKey, leftKey;
   int yawSpeed_per_sec, pitchSpeed_per_sec;
   int moveToTargetKey, switchTargetModeKey;
   bool doTraceTarget;
   float mouseTranslateSensitivity, mouseRotateSensitivity;
 public:
-  CameraManager(DBDG::GLGame *glGame, QuarterViewCamera *camera);  
+  CameraManager(DBDG::GLGame *glGame, DBDG::Util::QuarterViewCamera *camera);  
   void update(const float &delta_time_sec);
-  void changeTarget(DBDG::Util::Character *target);
-  QuarterViewCamera* getCamera() {  return camera;  }
+  void changeTarget(DBDG::Util::Movable *target);
+  DBDG::Util::QuarterViewCamera* getCamera() {  return camera;  }
 
 private:
   void checkMouse(const float &delta_time_sec);

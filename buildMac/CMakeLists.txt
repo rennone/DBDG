@@ -7,8 +7,8 @@ set(Project django)
 PROJECT(${Project})
 
 #c++0x対応オプション
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS")
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS -static")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS -static")
 set(CMAKE_CXX_FLAGS "-std=c++0x") 
 
 set(CMAKE_BUILD_TYPE release)
@@ -17,24 +17,24 @@ set(serial "1.0.0")
 include_directories("../include")
 
 #GLEW GLFWのリンク
-link_directories("GLFW/lib")
-link_directories("GLEW/lib")
-link_directories("GLUT/lib")
-link_directories("ALUT/lib")
+link_directories("GLFW")
+link_directories("GLEW")
+link_directories("GLUT")
+link_directories("ALUT")
 
 # macにはGLUTがデフォルトとで入っているのでそっちを使う
-find_package(GLUT)
-include_directories(${GLUT_INCLUDE_DIRS})
-link_directories(${GLUT_LIBRARY_DIRS})
-if(NOT GLUT_FOUND)
-       message(ERROR " GLUT not found!")
-endif(NOT GLUT_FOUND)
+#find_package(GLUT)
+#include_directories(${GLUT_INCLUDE_DIRS})
+#link_directories(${GLUT_LIBRARY_DIRS})
+#if(NOT GLUT_FOUND)
+#       message(ERROR " GLUT not found!")
+#endif(NOT GLUT_FOUND)
 
 #ALUTはfindpackageで見つからなかったので, 手打ち
-set(ALUT_INCLUDE_DIR /usr/local/opt/freealut/include)
-set(ALUT_LIBRARY_DIR /usr/local/opt/freealut/lib)
-include_directories(${ALUT_INCLUDE_DIR})
-link_directories(${ALUT_LIBRARY_DIR})
+#set(ALUT_INCLUDE_DIR /usr/local/opt/freealut/include)
+#set(ALUT_LIBRARY_DIR /usr/local/opt/freealut/lib)
+#include_directories(${ALUT_INCLUDE_DIR})
+#link_directories(${ALUT_LIBRARY_DIR})
 
 #aboud OpenGL
 find_package(OPENGL)
@@ -44,15 +44,22 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
+#aboud OpenAL
+find_package(OPENAL)
+include_directories(${OPENAL_INCLUDE_DIRS})
+link_directories(${OPENAL_LIBRARY_DIRS})
+if(NOT OPENAL_FOUND)
+    message(ERROR " OPENAL not found!")
+endif(NOT OPENAL_FOUND)
 
 #cppファイルをまとめて, Projetへリンク
 file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp) #AL関連のファイル
 file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp) #GL関連
 file(GLOB glUtilSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/util/*.cpp)
-add_library(${Project} STATIC ${glSrc} ${alSrc} ${glUtilSrc})
+ADD_LIBRARY(${Project} STATIC ${glSrc} ${alSrc} ${glUtilSrc})
 
 # TODO OpenGLとかを, django一つにまとめられない => DLLをスタティックにリンクしてない???
-target_link_libraries(${Project} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} glfw3 GLEW alut m)
+TARGET_LINK_LIBRARIES(${Project} glut glfw3 GLEW ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} alut ${OPENAL_LIBRARY} m)
 
 install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 

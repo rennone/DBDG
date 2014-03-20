@@ -8,7 +8,7 @@ namespace DBDG
   namespace Util
   {
 
-    ThirdPersonCamera::ThirdPersonCamera(GLFWwindow *window, const float &frustum_near, const float &frustum_far, const float &frustum_FOVY, Character *person)
+    ThirdPersonCamera::ThirdPersonCamera(GLFWwindow *window, const float &frustum_near, const float &frustum_far, const float &frustum_FOVY, Movable *person)
       :Camera3D(window, frustum_near, frustum_far, frustum_FOVY)
       ,person(person)
       ,yaw(45)
@@ -24,7 +24,7 @@ namespace DBDG
     }
     
     ThirdPersonCamera::ThirdPersonCamera(GLFWwindow *window, const Vector3 &position, const Vector3 &look,
-                        const float &frustum_near, const float &frustum_far, const float &frustum_FOVY, Character *person)
+                        const float &frustum_near, const float &frustum_far, const float &frustum_FOVY, Movable *person)
       :Camera3D(window, position, look, frustum_near, frustum_far, frustum_FOVY)
       ,person(person)
       ,yaw(0)

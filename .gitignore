@@ -17,3 +17,5 @@ CMakeF*
 cmake_*
 Makefile
 install_*
+
+*.DS_Store
