@@ -14,13 +14,18 @@ set(CMAKE_CXX_FLAGS "-std=c++0x")
 
 set(CMAKE_BUILD_TYPE release)
 
+link_directories(~/git/DBDG/buildmac/GLUT)
+link_directories(~/git/DBDG/buildmac/GLFW)
+link_directories(~/git/DBDG/buildmac/GLEW)
+link_directories(~/git/DBDG/buildmac/ALUT)
+
 #About GLUT
-find_package(GLUT)
-include_directories(${GLUT_INCLUDE_DIRS})
-link_directories(${GLUT_LIBRARY_DIRS})
-if(NOT GLUT_FOUND)
-       message(ERROR " GLUT not found!")
-endif(NOT GLUT_FOUND)
+#find_package(GLUT)
+#include_directories(${GLUT_INCLUDE_DIRS})
+#link_directories(${GLUT_LIBRARY_DIRS})
+#if(NOT GLUT_FOUND)
+#       message(ERROR " GLUT not found!")
+#endif(NOT GLUT_FOUND)
 
 #aboud OpenGL
 find_package(OPENGL)
@@ -30,11 +35,11 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
-find_package(GLEW)
-link_directories(${GLEW_LIBRARY_DIRS})
+#find_package(GLEW)
+#link_directories(${GLEW_LIBRARY_DIRS})
 
-find_package(GLFW)
-link_directories(${GLFW_LIBRARY_DIRS})
+#find_package(GLFW)
+#link_directories(${GLFW_LIBRARY_DIRS})
 
 find_package(OPENAL)
 include_directories(${OPENAL_INCLUDE_DIRS})
@@ -43,13 +48,13 @@ if(NOT OPENAL_FOUND)
     message(ERROR " OPENAL not found!")
 endif(NOT OPENAL_FOUND)
 
-link_directories(/usr/local/opt/freealut/lib)
+#link_directories(/usr/local/opt/freealut/lib)
 
 include_directories(~/git/DBDG/include)
 link_directories(~/git/DBDG/lib)
 
 add_executable(${Project} ${srcFile})
-target_link_libraries(${Project} ${OPENGL_LIBRARY}  ${GLUT_LIBRARY} ${GLFW_LIBRARY} ${GLEW_LIBRARY} m)
+target_link_libraries(${Project} ${OPENGL_gl_LIBRARY} glut glfw3 glew m)
 target_link_libraries(${Project} alut ${OPENAL_LIBRARY})
 target_link_libraries(${Project} django)
 
