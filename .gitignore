@@ -5,12 +5,12 @@
 
 # Compiled Dynamic libraries
 *.so
-*.dylib
+# *.dylib
 
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+# *.a
 
 CMakeC*
 CMakeF*
