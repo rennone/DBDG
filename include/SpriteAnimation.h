@@ -2,6 +2,7 @@
 #define SPRITE_ANIMATION_H
 
 #include <cmath>
+#include <memory>
 #include "Texture.h"
 namespace DBDG
 {
@@ -28,13 +29,13 @@ namespace DBDG
   {
     animationTime = time;
   }
-  
+
   void SpriteAnimation::setLoop(const bool &loop)
   {
     isLoop = loop;
   }
 
-  TextureRegion* getFrameSprite(const float &time)
+  shared_ptr<TextureRegion> getFrame(const float &time)
   {
     int frameIndex = floor(time/animationTime*frameNum);
 

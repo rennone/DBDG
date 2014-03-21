@@ -2,6 +2,8 @@
 #define UTIL_ACTOR_H
 
 #include <vector>
+#include <memory>
+
 namespace DBDG
 {
   class GLGame;
@@ -10,7 +12,7 @@ namespace DBDG
     class Actor
     {
     public:
-      enum ActorStatus
+      enum struct ActorStatus
       {
         Action,
         UpdateOnly,
@@ -18,27 +20,27 @@ namespace DBDG
         NoUse,
         Dead
       };
-  
+
       Actor(DBDG::GLGame *glGame);
       virtual ~Actor();
       virtual void render(const float &deltaTime);
       virtual void update(const float &deltaTime);
       virtual void checkStatus();
-  
-      virtual void addChild(Actor* child);
-    
-      enum ActorStatus getStatus() const;
-      void setStatus(const enum ActorStatus &status);  
-      const std::vector<Actor*>& getChildren() { return children; }
 
-      Actor* searchChild(const int &id);
-    
+      virtual void addChild(std::shared_ptr<Actor> child);
+
+      enum ActorStatus getStatus() const;
+      void setStatus(const enum ActorStatus &status);
+      const std::vector<std::shared_ptr<Actor>>& getChildren() { return children; }
+
+      std::shared_ptr<Actor> searchChild(const int &id);
+
     protected:
       DBDG::GLGame* const glGame;
-      std::vector<Actor*> children;
+      std::vector<std::shared_ptr<Actor>> children;
       enum ActorStatus status;
       unsigned int m_Id;
-  
+
     private:
       static unsigned int s_Id;
     };

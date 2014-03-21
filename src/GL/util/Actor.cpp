@@ -11,7 +11,7 @@ namespace DBDG
       :glGame(glGame)
       ,m_Id(s_Id++)
     {
-      status = Actor::Action;
+      status = ActorStatus::Action;
     }
 
     Actor::~Actor()
@@ -22,7 +22,7 @@ namespace DBDG
     {
       for( auto child : children)
       {    
-        if(child->status == Actor::Action || child->status == Actor::RenderOnly)
+        if(child->status == ActorStatus::Action || child->status == ActorStatus::RenderOnly)
           child->render(deltaTime);
       }
     }
@@ -31,56 +31,49 @@ namespace DBDG
     {
       for( auto &child : children)
       {    
-        if(child->status == Actor::Action || child->status == Actor::UpdateOnly)
+        if(child->status == ActorStatus::Action || child->status == ActorStatus::UpdateOnly)
           child->update(deltaTime);   
       }                
     }
 
     void Actor::checkStatus()
     {
-      if(status == Actor::Dead)
+      if(status == ActorStatus::Dead)
       {
         for( auto &child : children)
-          child->setStatus(Actor::Dead);
+          child->setStatus(ActorStatus::Dead);
       }
 
       for( auto &child : children)
         child->checkStatus();
 
-      //Deadステータスを削除し, NULLを入れる
-      for( auto &child : children)
-      {    
-        if(child->getStatus() == Actor::Dead)
-        {      
-          delete child;
-          child = NULL;
-        }    
-      }
-      //NULLの要素を削除
-      auto end_it = remove_if(children.begin(), children.end(),
-                              [](Actor* p) -> bool { return p == NULL; });  
+      //Deadステータスを削除し
+      auto end_it = remove_if(children.begin(),
+                              children.end(),
+                              []( std::shared_ptr<Actor> p) -> bool
+                              { return p->getStatus() == ActorStatus::Dead; });  
       children.erase(end_it, children.end());
     }
 
-    void Actor::addChild(Actor* child)
+    void Actor::addChild(std::shared_ptr<Actor> child)
     { 
       children.push_back(child);
     }
 
 //idで探索
-    Actor* Actor::searchChild(const int &id)
+    std::shared_ptr<Actor> Actor::searchChild(const int &id)
     {
       if(this->m_Id == id)
-        return this;
+        return std::shared_ptr<Actor>(this);
 
       for(const auto &child : children)
       {
         auto res = child->searchChild(id);
-        if(res != NULL)
+        if(res != nullptr)
           return res;
       }
   
-      return NULL;
+      return nullptr;
     }
 
     enum Actor::ActorStatus Actor::getStatus() const

@@ -84,8 +84,8 @@ public:
     auto camera = new DBDG::Util::QuarterViewCamera(glGame->getWindow());
     cameraMgr = new CameraManager(glGame, camera);
     cameraMgr->changeTarget(player);
-    addChild(player);
-    addChild(cameraMgr);
+    addChild(std::shared_ptr<Player>(player));
+    addChild(std::shared_ptr<CameraManager>(cameraMgr));
   }
 
   void update(const float &delta_time_sec)
@@ -141,7 +141,7 @@ PlayScene::PlayScene(DBDG::GLGame *glGame)
   playerMgr = new PlayerManager(glGame);
   
   root = new Actor(glGame);
-  root->addChild(playerMgr);
+  root->addChild(std::shared_ptr<PlayerManager>(playerMgr));
   LightSetting();
 }
 

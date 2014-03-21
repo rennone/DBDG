@@ -6,7 +6,7 @@
 CameraManager::CameraManager(DBDG::GLGame *glGame, DBDG::Util::QuarterViewCamera *camera)
   :Actor(glGame),camera(camera),target(NULL),doTraceTarget(false)
 {
-  setStatus(DBDG::Util::Actor::UpdateOnly);
+  setStatus(DBDG::Util::Actor::ActorStatus::UpdateOnly);
 
   /* todo ユーザ設定から読み込むようにする　*/
   yawSpeed_per_sec   = 240;
