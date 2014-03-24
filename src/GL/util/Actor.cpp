@@ -71,8 +71,7 @@ namespace DBDG
         auto res = child->searchChild(id);
         if(res != nullptr)
           return res;
-      }
-  
+      }  
       return nullptr;
     }
 
@@ -84,6 +83,16 @@ namespace DBDG
     void Actor::setStatus(const enum ActorStatus &status)
     {
       this->status = status;
+    }
+
+    void Actor::setTag(const std::string &_tag)
+    {
+      tag = _tag;
+    }
+
+    std::string Actor::getTag() const
+    {
+      return tag;
     }
   }
 }

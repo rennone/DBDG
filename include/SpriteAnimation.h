@@ -16,7 +16,7 @@ namespace DBDG
     SpriteAnimation(const float &animation_time, const std::vector<TextureRegion*> &regions);
     SpriteAnimation(const float &animation_time, const std::vector<TextureRegion*> &&regions);
     void setLoop(const bool &loop);
-    TextureRegion* getFrameSprite(const float &time);
+    const TextureRegion* getFrameSprite(const float &time) const;
   };
 }
 #endif

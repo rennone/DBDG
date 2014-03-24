@@ -58,10 +58,10 @@ file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp) #AL関連
 file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp) #GL関連
 file(GLOB glUtilSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/util/*.cpp) #glUtil
 
-ADD_LIBRARY(${Project} SHARED ${src} ${glSrc} ${alSrc} ${glUtilSrc})
+ADD_LIBRARY(${Project} STATIC ${src} ${glSrc} ${alSrc} ${glUtilSrc})
 
 # TODO OpenGLとかを, django一つにまとめられない => DLLをスタティックにリンクしてない???
 TARGET_LINK_LIBRARIES(${Project} glut glfw3 GLEW ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} alut ${OPENAL_LIBRARY} assimp.3.0.255 m)
 
-#install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../test/ActionGameTest)
+install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+#install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../test/ActionGameTest)

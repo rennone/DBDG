@@ -6,11 +6,14 @@
 
 namespace DBDG
 {
+  class ALSoundManager;
+  
   class ALSound : public Sound
   {
+    friend class ALSoundManager;
     ALuint buffer, source;
-  public:
     ALSound(const std::string &file_name);
+  public:
     void play();
     void dispose();
   };
@@ -19,6 +22,8 @@ namespace DBDG
   {
     ALSoundManager() { }
     ~ALSoundManager() { };
+    ALSoundManager(const ALSoundManager &other);
+    ALSoundManager& operator=(const ALSoundManager &other);
   public:
     static ALSoundManager& getInstance()
     {

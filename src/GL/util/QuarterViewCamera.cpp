@@ -17,8 +17,7 @@ namespace DBDG
       ,maxRadius(3000), minRadius(500)
       ,yaw(0), pitch(45), radius(1000)
     {
-      radius = 0.5f*(maxRadius+minRadius);
-      
+      radius = 0.5f*(maxRadius+minRadius);      
     }
 
     void QuarterViewCamera::calcPosition()

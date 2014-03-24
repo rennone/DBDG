@@ -6,8 +6,10 @@
 
 namespace DBDG
 {
+  class ALMusicManager;
   class ALMusic : public Music
   {
+    friend class ALMusicManager;
     ALuint buffer, source;
   public:
     ALMusic(const std::string &file_name);
@@ -19,6 +21,8 @@ namespace DBDG
   {
     ALMusicManager() { }
     ~ALMusicManager() { };
+    ALMusicManager(const ALMusicManager &other);
+    ALMusicManager& operator=(const ALMusicManager &other);
   public:
     static ALMusicManager& getInstance()
     {

@@ -15,6 +15,8 @@
 #define GLFW_NO_GLU
 #endif
 
+#include "../dbdg.h"
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "GL/freeglut.h"

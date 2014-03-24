@@ -8,7 +8,7 @@ void Assets::loadAssets()
 {
   std::string gar = "resource/gargoyle/gargoyle.x";
   std::string tes = "resource/dragon.x";
-  gargoyle = DBDG::GLGraphic::getInstance()->getModelManager()->newModel(tes, 1);
+  gargoyle =  DBDG::GLGraphic::getInstance()->getModelManager()->newModel(tes, 1);
   akan     = DBDG::ALAudio::getInstance().getSoundManager().newSound("resource/Akan00.wav");
 
   auto texture = DBDG::GLGraphic::getInstance()->getTextureManager()->newTexture("resource/fieldAtlas.png");

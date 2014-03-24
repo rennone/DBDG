@@ -21,7 +21,7 @@ namespace DBDG
     isLoop = loop;
   }
 
-  TextureRegion* SpriteAnimation::getFrameSprite(const float &time)
+  const TextureRegion* SpriteAnimation::getFrameSprite(const float &time) const
   {
     int frameIndex = floor(time/animationTime*frameNum);
 
@@ -29,7 +29,7 @@ namespace DBDG
       frameIndex = frameIndex%frameNum;
 
     if( frameIndex<0 || frameIndex >= frameNum)
-      return nullptr;
+      return frames[frameNum-1];
 
     return frames[frameIndex];
   } 
