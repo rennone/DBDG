@@ -6,10 +6,10 @@ set(Project django)
 
 PROJECT(${Project})
 
-#c++0x対応オプション
+#c++11対応オプション
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS -static")
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS -static")
-set(CMAKE_CXX_FLAGS "-std=c++0x") 
+set(CMAKE_CXX_FLAGS "-std=c++11") 
 
 set(CMAKE_BUILD_TYPE release)
 set(serial "1.0.0")

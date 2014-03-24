@@ -10,23 +10,6 @@ namespace DBDG
   GLGame* GLDirector::glGame;
   float GLDirector::elapsedTime_sec[2];
   float GLDirector::fps;
-
-  /*
-  void GLDirector::initGLDBDG(int argc, char **argv)
-  {
-    if(argc > 0)
-      Resource::setCurrentDirectory(Resource::getSuperiorFolderPath(argv[0]));
-    
-    glutInit(&argc, argv);
-
-    glfwSetErrorCallback(error_callback);
-    if(!glfwInit())
-    {
-      std::cerr << "cannot start glfw" << std::endl;
-      exit(EXIT_FAILURE);
-    }
-  }
-  */
   
   void GLDirector::startGame(GLGame *glGame)
   {
@@ -45,7 +28,9 @@ namespace DBDG
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       
       const float deltaTime_sec = elapsedTime_sec[1] - elapsedTime_sec[0];
-      fps = 1.0f/deltaTime_sec;
+      
+      if(deltaTime_sec>0)
+        fps = 1.0f/deltaTime_sec;
       
       elapsedTime_sec[0] = glfwGetTime();
       
@@ -60,6 +45,5 @@ namespace DBDG
     glfwTerminate();  
     exit(EXIT_SUCCESS);
   }
-
   
 }

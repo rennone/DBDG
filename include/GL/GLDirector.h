@@ -17,6 +17,7 @@ namespace DBDG
     static void loop();
   private:
     GLDirector();
+    GLDirector(const GLDirector &other);
     ~GLDirector();
     GLDirector& operator=(const GLDirector &other);
   };
