@@ -1,7 +1,9 @@
-#infndef DBDG_FILE_IO_H
+#ifndef DBDG_FILE_IO_H
 #define DBDG_FILE_IO_H
 
 #include <string>
+#include <memory>
+
 namespace DBDG
 {
   //リソースフォルダへのパスを保持するクラス
@@ -15,36 +17,32 @@ namespace DBDG
       return dir;    
     }
 
-    FileIO(const std::string &root_directory)
-      :
-    {
-      
-    }
+    FileIO()
+      :rootDirectory("")
+    { }
     
-    FileIO(const Resource &other);
-    FileIO& operator=(const Resource &other);
+    FileIO(const FileIO &other);
+    FileIO& operator=(const FileIO &other);
   public:
     static FileIO* getInstance()
     {
-      FileIO instance;
+      static FileIO instance;
       return &instance;
     }
 
-    FILE* openFile(const std::string file_name)
+    FILE* fileOpen(const std::string file_name, const char* mode);
+
+    void setRootDirectory(const std::string &root)
     {
-      return NULL; 
-    }
-    
-    static void setCurrentDirectory(std::string path)
-    {
-      CurrentDirectory() = path;
+      rootDirectory = root;
     }
 
-    static std::string getCurrentDirectory()
+    std::string getRootDirectory()
     {
-      return CurrentDirectory();
-    }    
+      return rootDirectory;
+    }
 
+    // "/"文字より前の文字列を取得する
     static std::string getSuperiorFolderPath(const std::string str)
     {
       auto index = str.rfind("/");
@@ -53,8 +51,6 @@ namespace DBDG
       else
         return str.substr(0, index+1); //0からindex文字とってくる.
     }
-
-    
   };
 }
 

@@ -14,9 +14,15 @@ namespace DBDG
       Vector3 position;
     public:
       HasPosition(DBDG::GLGame *glGame, const Vector3 &position)
-        :Actor(glGame) ,position(position)
+        :Actor(glGame)
+        ,position(position)
       {
       }
+    HasPosition(DBDG::GLGame *glGame)
+      :Actor(glGame) ,position(Vector3())
+      {
+      }
+      
       virtual ~HasPosition(){}
         
       const Vector3& getPosition() const

@@ -1,6 +1,8 @@
 #ifndef DBDG_GL_DIRECTOR_H
 #define DBDG_GL_DIRECTOR_H
 
+//ヘッダーファイルのインクルードは, ""で書いた方が良い
+//外部から使うときに, そっちのmakeFileに書かれているパスに依存してしまうから
 struct GLFWwindow;
 namespace DBDG
 {

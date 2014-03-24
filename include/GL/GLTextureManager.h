@@ -14,7 +14,7 @@ namespace DBDG
       static GLTextureManager instance;
       return &instance;
     }
-    Texture* newTexture(const std::string file_name);
+    Texture* newTexture(const std::string &file_name) const;
   private:
     GLTextureManager(){}
     GLTextureManager(const GLTextureManager &other);

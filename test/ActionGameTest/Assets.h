@@ -7,9 +7,12 @@
 class Assets
 {
 public:
-  static DBDG::XfileModel *gargoyle;
+  static DBDG::Model *gargoyle;
   static DBDG::Sound *akan;
+  static DBDG::SpriteAnimation *animation;
+  
   static void loadAssets();
+
 private:
   Assets();  
 };

@@ -18,7 +18,7 @@ namespace DBDG
     {		
     }
 	
-  Vector3(float _x, float _y, float _z)
+  Vector3(const float &_x, const float &_y, const float &_z)
     :x(_x), y(_y), z(_z)
     {
     }
@@ -122,11 +122,11 @@ namespace DBDG
       return sqrt(distX*distX + distY*distY + distZ*distZ); 
     }
 	
-    float dist(float x, float y, float z) const
+    float dist(const float &_x, const float &_y, const float &_z) const
     {
-      float distX = this->x - x;
-      float distY = this->y - y;
-      float distZ = this->z - z;
+      float distX = this->x - _x;
+      float distY = this->y - _y;
+      float distZ = this->z - _z;
       return sqrt(distX*distX + distY*distY + distZ*distZ); 
     }
 
@@ -139,7 +139,7 @@ namespace DBDG
     }
 
     //2乗距離
-    float distSquared(Vector3 other) const
+    float distSquared(const Vector3 &other) const
     {
       float distX = this->x - other.x;
       float distY = this->y - other.y;
@@ -148,11 +148,11 @@ namespace DBDG
       return distX*distX + distY*distY + distZ*distZ; 
     }
 	
-    float distSquared(float x, float y) const
+    float distSquared(const float &_x, const float &_y, const float &_z) const
     {
-      float distX = this->x - x;
-      float distY = this->y - y;
-      float distZ = this->z - z;
+      float distX = this->x - _x;
+      float distY = this->y - _y;
+      float distZ = this->z - _z;
     
       return distX*distX + distY*distY + distZ*distZ; 
     }

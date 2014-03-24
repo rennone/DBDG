@@ -1,7 +1,7 @@
 #include <GL/util/glDBDGUtil.h>
 #include "PlayScene.h"
 #include "Assets.h"
-#include "CameraManager.h"
+//#include "CameraManager.h"
 
 using DBDG::Util::Actor;
 using DBDG::Util::HasPosition;
@@ -64,6 +64,7 @@ public:
     glPushMatrix();
     glTranslated(position.x, position.y, position.z);
     glRotated(rad*DBDG::Vector2::TO_DEGREE, 0, 1, 0);
+//    glScaled(100, 100, 100);
     Assets::gargoyle->renderWithColor3(DBDG::Color3(1,0,0));
     glPopMatrix();
   }
@@ -71,21 +72,19 @@ public:
 
 class PlayerManager : public DBDG::Util::Actor
 {
-  Player* player;
-  CameraManager* cameraMgr;  
+  std::shared_ptr<Player> player;
+  std::shared_ptr<DBDG::Util::CameraManager> cameraMgr;  
 public:
   PlayerManager(DBDG::GLGame *glGame)
     :DBDG::Util::Actor(glGame)
   {
-    player = new Player(glGame, DBDG::Vector3(0,0,0));
-    
-//    auto camera = new ThirdPersonCamera(glGame->getWindow() , DBDG::Vector3(500,500,500),
-//                                        DBDG::Vector3(0,0,0), 1, 3000, 90, player);
-    auto camera = new DBDG::Util::QuarterViewCamera(glGame->getWindow());
-    cameraMgr = new CameraManager(glGame, camera);
+    player = std::make_shared<Player>(glGame, DBDG::Vector3(0,0,0));
+    auto camera     = new DBDG::Util::QuarterViewCamera(glGame->getWindow());
+    cameraMgr = std::make_shared<DBDG::Util::CameraManager>(glGame, camera);
+    cameraMgr->setZoomSpeed(1000);
     cameraMgr->changeTarget(player);
-    addChild(std::shared_ptr<Player>(player));
-    addChild(std::shared_ptr<CameraManager>(cameraMgr));
+    addChild(player);
+    addChild(cameraMgr);
   }
 
   void update(const float &delta_time_sec)
@@ -100,29 +99,29 @@ public:
 
     auto dirX = dirZ.cross(cameraMgr->getCamera()->getUp());
     bool isMoved = false;
-    if(input->getKeyState(GLFW_KEY_UP) != GLFW_RELEASE)
+    if(input->getKeyState(GLFW_KEY_W) != GLFW_RELEASE)
     {
       direction += dirZ;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_DOWN) != GLFW_RELEASE)
+    if(input->getKeyState(GLFW_KEY_S) != GLFW_RELEASE)
     {
       direction -= dirZ;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_RIGHT) != GLFW_RELEASE)
+    if(input->getKeyState(GLFW_KEY_D) != GLFW_RELEASE)
     {
       direction += dirX;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_LEFT) != GLFW_RELEASE)
+    if(input->getKeyState(GLFW_KEY_A) != GLFW_RELEASE)
     {
       direction -= dirX;
       isMoved = true;
     }
 
     if(isMoved)
-      player->move(direction, speed);    
+      player->move(direction, speed);
     
     Actor::update(delta_time_sec);
   }
@@ -167,9 +166,22 @@ void PlayScene::update(const float &delta_time_sec)
 
 void PlayScene::render(const float &delta_time_sec)
 {
+  glPushMatrix();
   playerMgr->getCamera()->setViewportAndMatrices();
+  glEnable(GL_DEPTH_TEST);
   DBDG::dbdgDrawGrid(100, 80, 80);
   DBDG::dbdgDrawAxis(1000);
 
   root->render(delta_time_sec);
+
+  static DBDG::SpriteBatcher3D batcher(30);
+  static float elapsed_time_sec = 0;
+  elapsed_time_sec += delta_time_sec;
+
+  batcher.clearSprites();
+  auto region = Assets::animation->getFrameSprite(elapsed_time_sec);
+  batcher.pushSprite(DBDG::Vector3(0,0,0), DBDG::Vector3(0,1,0), DBDG::Vector2(500, 500), region);
+  batcher.drawAllSprites(region->texture);
+  
+  glPopMatrix();
 }

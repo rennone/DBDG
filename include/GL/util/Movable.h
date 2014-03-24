@@ -17,6 +17,13 @@ namespace DBDG
         ,direction(direction)
       {
       }
+      
+      Movable(GLGame *glGame)
+        :HasPosition(glGame)
+        ,direction(Vector3())
+      {
+      }
+      
       virtual ~Movable(){}
 
       Vector3 getDirection() const { return direction; }

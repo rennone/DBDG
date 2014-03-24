@@ -6,3 +6,5 @@ class Quaternion
   float x,y,z,w;
 public :
 };
+
+#endif

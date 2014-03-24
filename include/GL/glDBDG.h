@@ -22,11 +22,9 @@
 #include "GLDirector.h"
 #include "GLGame.h"
 #include "GLScene.h"
+#include "GLGraphic.h"
 #include "GLInput.h"
-#include "GLAudio.h"
 #include "GLFont.h"
-#include "GLTexture.h"
-#include "XfileModel.h"
 #include "SpriteBatcher.h"
 #include "SpriteBatcher3D.h"
 #include "Camera2D.h"
@@ -34,4 +32,12 @@
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "ScrollHandler.h"
+
+#include "../SpriteAnimation.h"
+
+/*
+  GLTexture AssimpModel, XfileModelはManagerクラスからしか呼ばれないようにインクルードしない
+ */
+
+
 #endif

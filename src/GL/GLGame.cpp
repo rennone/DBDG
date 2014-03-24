@@ -3,8 +3,8 @@
 //glfw glewの mac用の設定
 #include <GL/glDBDG.h>
 #include <AL/AL/alut.h>
-
 #include <GL/GLGame.h>
+#include <AL/ALAudio.h>
 
 namespace DBDG
 {
@@ -82,7 +82,8 @@ namespace DBDG
     }
 
     input  = new GLInput(window);
-    audio  = NULL;
+    audio  = &ALAudio::getInstance();
+    graphic = GLGraphic::getInstance();
 
     glfwSetKeyCallback(window, keyCallback);
     glfwSetMouseButtonCallback(window, mouseCallback);
@@ -146,6 +147,11 @@ namespace DBDG
   Audio* const GLGame::getAudio()  const
   {
     return audio;
+  }
+
+  Graphic* const GLGame::getGraphic() const
+  {
+    return graphic;
   }
   
   Scene* const GLGame::getCurrentScene() const

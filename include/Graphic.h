@@ -12,14 +12,14 @@ namespace DBDG
   {
   public:
     virtual ~TextureManager(){}
-    Texture* newTexture(const std::string &file_name);
+    virtual Texture* newTexture(const std::string &file_name) const = 0;
   };
   
   class ModelManager
   {
   public:
     virtual ~ModelManager(){}
-    Model* newModel(const std::string &file_name, const float &scale);
+    virtual Model* newModel(const std::string &file_name, const float &scale) const = 0;
   };
   
   class Graphic

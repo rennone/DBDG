@@ -189,10 +189,12 @@ public :
   }
 };
 
+
 int main(int argc, char** argv)
 {
   TestGame *game = new TestGame(argc, argv, "test", 640, 480);
   glClearColor(0.0, 0.0, 0.0, 1.0);
+  
   DBDG::GLDirector::startGame(game);
   return 0;
 }

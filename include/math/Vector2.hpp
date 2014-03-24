@@ -17,7 +17,7 @@ namespace DBDG
       x = y = 0;
     }
 	
-    Vector2(float x, float y){
+    Vector2(const float &x, const float &y){
       this->x = x;
       this->y = y;
     }
@@ -101,7 +101,7 @@ namespace DBDG
       return angle;
     }
 	
-    Vector2& rotate(float degree){
+    Vector2& rotate(const float &degree){
       float rad = degree * TO_RADIANS;
       float _cos = cos(rad);
       float _sin = sin(rad);
@@ -114,7 +114,7 @@ namespace DBDG
       return *this;
     }
 	
-    float dist(Vector2 other) const
+    float dist(const Vector2 &other) const
     {
       float distX = this->x - other.x;
       float distY = this->y - other.y;
@@ -122,7 +122,7 @@ namespace DBDG
       return sqrt(distX*distX + distY*distY); 
     }
 	
-    float dist(float x, float y) const
+    float dist(const float &x, const float &y) const
     {
       float distX = this->x - x;
       float distY = this->y - y;
@@ -138,7 +138,7 @@ namespace DBDG
     }
 
     //2乗距離
-    float distSquared(Vector2 other) const
+    float distSquared(const Vector2 &other) const
     {
       float distX = this->x - other.x;
       float distY = this->y - other.y;
@@ -146,7 +146,7 @@ namespace DBDG
       return distX*distX + distY*distY; 
     }
 	
-    float distSquared(float x, float y) const
+    float distSquared(const float &x, const float &y) const
     {
       float distX = this->x - x;
       float distY = this->y - y;

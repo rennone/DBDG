@@ -13,7 +13,7 @@ namespace DBDG
       static GLModelManager instance;
       return &instance;
     }
-    Model* newModel(const std::string &file_name, const float &scale);
+    Model* newModel(const std::string &file_name, const float &scale) const;
   private:
     GLModelManager(){}
     GLModelManager( const GLModelManager &other);

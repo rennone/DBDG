@@ -9,10 +9,11 @@
 struct GLFWwindow;
 namespace DBDG
 {
-  class GLAudio;
   class GLInput;
   class GLScene;
-
+  class Audio;
+  class Graphic;
+  
   class GLGame: public Game
   {
     static void error_callback(int error, const char* description);
@@ -23,7 +24,8 @@ namespace DBDG
   protected:
     GLFWwindow *window;
     GLInput *input;
-    GLAudio *audio;
+    Audio *audio;
+    Graphic *graphic;
     Scene *scene,*nextScene;
     void replaceScene();  //次のシーンがあれば入れ替える
   public:
@@ -33,7 +35,8 @@ namespace DBDG
     void loop(const float &delta_time_sec);
     bool setScene(Scene *scene);
     Input* const getInput() const;
-    Audio* const getAudio()  const; 
+    Audio* const getAudio()  const;
+    Graphic* const getGraphic() const;
     Scene* const getCurrentScene() const;
     GLFWwindow* getWindow() const;   //glfwの関数を扱う関係でconstにできない
   };

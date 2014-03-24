@@ -5,10 +5,10 @@
 #include <string>
 #include <cstring>
 #include <Resource.h>
+#include <FileIO.h>
+
 namespace
-{  
-  std::string SuperiorFolder;
-  
+{    
   std::string spliter(std::string str) 
   {
     int p = 0; 
@@ -86,7 +86,7 @@ namespace DBDG
 
       //textureListに無ければ追加
       if(textureList.find(texName) == textureList.end())
-        textureList[texName] = new GLTexture(SuperiorFolder + texName);
+        textureList[texName] = GLGraphic::getInstance()->getTextureManager()->newTexture(Model::superiorPath + texName);
 
       mtl.texture = textureList[texName];
     }
@@ -239,17 +239,7 @@ namespace DBDG
     //Xファイルを開いて内容を読み込む
     FILE* fp=NULL;
 
-    //fileNameをディレクトリ込みで渡した場合, 上位ディレクトリを取得しておく
-    SuperiorFolder = Resource::getSuperiorFolderPath(fileName);
-
-    std::string name = Resource::getCurrentDirectory() + fileName;
-  
-    if( (fp = fopen(name.c_str(), "rt")) == NULL)
-    {
-      fprintf(stderr, "can not open file %s\n", name.c_str());
-      return;
-    }
-
+    fp = FileIO::getInstance()->fileOpen(fileName, "rt");
     //読み込み 
     fseek(fp,SEEK_SET,0);
     while(!feof(fp))
@@ -412,7 +402,7 @@ namespace DBDG
   {
     beginRender();
     
-    for(auto mat : materials)
+    for(auto &mat : materials)
     {
       //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
       if ( mat.meshes.size() <= 0 )
@@ -432,7 +422,7 @@ namespace DBDG
   {
   beginRender();  
   
-  for(auto mat : materials)
+  for(auto &mat : materials)
   {
   //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
   if ( mat.meshes.size() <= 0 )
@@ -453,12 +443,12 @@ namespace DBDG
   beginRender();  
 
   const Color4 color(color3.r, color3.g, color3.b, 1);
-  for(auto mat : materials)
+  for(auto &mat : materials)
   {
   //もしかしたら, 何のポリゴンも持たないマテリアルがあるかもしれないので, それ対策
   if ( mat.meshes.size() <= 0 )
     continue;
-  
+
   setMaterialColor(color, color, color, mat.shininess);
 
   bindVBO(mat.bufferId, mat.texture);
