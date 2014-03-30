@@ -15,7 +15,7 @@ namespace DBDG
   public:
     MouseHandler(GLFWwindow *window);  
     ~MouseHandler();  
-    const MouseEvent* const getMouseEvent() const; 
+    const MouseEvent* const getMouseEvent() const;
     void onEvent(int button, int action, int mods);
     void update();  
   };  

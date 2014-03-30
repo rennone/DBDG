@@ -19,6 +19,7 @@ namespace DBDG
     int button;   //右クリックか左クリックか
     int modifier; //Shift, Ctrl, Alt, Superキー用
     double x, y;
+    double velosityX, velosityY;
   };
 
   class ScrollEvent

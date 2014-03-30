@@ -75,6 +75,21 @@ namespace DBDG
       return nullptr;
     }
 
+    //tagで探索
+    std::shared_ptr<Actor> Actor::searchChild(const std::string &_tag)
+    {
+      if(this->tag == _tag)
+        return std::shared_ptr<Actor>(this);
+
+      for(const auto &child : children)
+      {
+        auto res = child->searchChild(_tag);
+        if(res != nullptr)
+          return res;
+      }
+      return nullptr;
+    }
+
     enum Actor::ActorStatus Actor::getStatus() const
     {
       return status;

@@ -14,4 +14,14 @@ namespace DBDG
     }    
     return fp;
   }
+
+  //static member
+  std::string FileIO::getSuperiorFolderPath(const std::string str)
+  {
+    auto index = str.rfind("/");
+    if(index == std::string::npos)
+      return "";
+    else
+      return str.substr(0, index+1); //0からindex文字とってくる.
+  }
 }

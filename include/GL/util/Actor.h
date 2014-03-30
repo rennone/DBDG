@@ -31,6 +31,7 @@ namespace DBDG
       void setStatus(const enum ActorStatus &status);
       const std::vector<std::shared_ptr<Actor>>& getChildren() { return children; }
       std::shared_ptr<Actor> searchChild(const int &id);
+      std::shared_ptr<Actor> searchChild(const std::string &tag);
       void setTag(const std::string &tag);
       std::string getTag() const;
     protected:

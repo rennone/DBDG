@@ -48,11 +48,12 @@ namespace DBDG
   {
     
     if(argc > 0)
-      Resource::setCurrentDirectory(Resource::getSuperiorFolderPath(argv[0]));
+    {
+      FileIO::getInstance()->setRootDirectory(FileIO::getSuperiorFolderPath(argv[0]));
+    }
     
     glutInit(&argc, argv);
     alutInit(&argc, argv);
-
   
     glfwSetErrorCallback(error_callback);
     if(!glfwInit())
