@@ -86,7 +86,7 @@ namespace DBDG
 
       //textureListに無ければ追加
       if(textureList.find(texName) == textureList.end())
-        textureList[texName] = GLGraphic::getInstance()->getTextureManager()->newTexture(Model::superiorPath + texName);
+        textureList[texName] = GLGraphic::getInstance().getTextureManager().newTexture(Model::superiorPath + texName);
 
       mtl.texture = textureList[texName];
     }
@@ -239,7 +239,7 @@ namespace DBDG
     //Xファイルを開いて内容を読み込む
     FILE* fp=NULL;
 
-    fp = FileIO::getInstance()->fileOpen(fileName, "rt");
+    fp = FileIO::getInstance().fileOpen(fileName, "rt");
     //読み込み 
     fseek(fp,SEEK_SET,0);
     while(!feof(fp))

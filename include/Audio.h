@@ -8,6 +8,7 @@ namespace DBDG
   class Music
   {
   public:
+    virtual ~Music(){}
     virtual void play()=0;
     virtual void stop()=0;
     virtual void pause()=0;
@@ -21,25 +22,38 @@ namespace DBDG
   class Sound
   {
   public:
+    virtual ~Sound(){}
     virtual void play()=0;
     virtual void dispose()=0;
   };
 
   class SoundManager
   {
+    SoundManager(const SoundManager&);
+    SoundManager& operator=(const SoundManager&);
   public:
+    SoundManager(){}
+    virtual ~SoundManager(){}
     virtual Sound* newSound(const std::string &fileName) = 0;    
   };
 
   class MusicManager
   {
+    MusicManager(const MusicManager&);
+    MusicManager& operator=(const MusicManager&);
   public:
+    MusicManager(){}
+    virtual ~MusicManager(){}
     virtual Music* newMusic(const std::string &fileName) = 0;
   };
   
   class Audio
   {
+    Audio(const Audio &);
+    Audio& operator=(const Audio &);
   public:
+    Audio(){}
+    virtual ~Audio(){}
     virtual SoundManager& getSoundManager() const = 0;
     virtual MusicManager& getMusicManager() const = 0;
   };

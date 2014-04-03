@@ -16,29 +16,27 @@ namespace DBDG
   
   class GLGame: public Game
   {
-    static void error_callback(int error, const char* description);
-    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static void mouseCallback(GLFWwindow* window, int button, int action, int mods);
-    static void scrollCallback(GLFWwindow* window, double offsetX, double offsetY);
-    static void resize_callback(GLFWwindow* window, int width, int height);
-  protected:
-    GLFWwindow *window;
-    GLInput *input;
-    Audio *audio;
-    Graphic *graphic;
-    Scene *scene,*nextScene;
-    void replaceScene();  //次のシーンがあれば入れ替える
   public:
     GLGame(int argc, char **argv, std::string window_title);
     GLGame(int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen=false);
     virtual ~GLGame();
     void loop(const float &delta_time_sec);
     bool setScene(Scene *scene);
-    Input* const getInput() const;
-    Audio* const getAudio()  const;
-    Graphic* const getGraphic() const;
-    Scene* const getCurrentScene() const;
+    Input&   getInput() const;
+    Audio&   getAudio() const;
+    Graphic& getGraphic() const;
+    Scene&   getCurrentScene() const;
     GLFWwindow* getWindow() const;   //glfwの関数を扱う関係でconstにできない
+  private:
+    GLFWwindow *window;
+    GLInput *input;
+    Audio *audio;
+    Graphic *graphic;
+    Scene *scene,*nextScene;
+    void replaceScene();//次のシーンがあれば入れ替える
+
+    GLGame(const GLGame &);
+    GLGame& operator=(const GLGame&);
   };
 }
 #endif

@@ -10,23 +10,22 @@ namespace DBDG
   class GLGraphic : public Graphic
   {
   public:
-    static GLGraphic* getInstance()
+    static GLGraphic& getInstance()
     {
       static GLGraphic instance;
-      return &instance;
+      return instance;
     }
-  
-    TextureManager* const getTextureManager() const
+  GLGraphic():Graphic(){}
+    TextureManager& getTextureManager() const
     {
       return GLTextureManager::getInstance();
     }
-    ModelManager* const getModelManager() const
+    
+    ModelManager& getModelManager() const
     {
       return GLModelManager::getInstance();
-    }
-    
+    }    
   private:
-    GLGraphic(){}
     GLGraphic(const GLGraphic &other);
     GLGraphic& operator=(const GLGraphic &other);
   };

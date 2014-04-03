@@ -19,7 +19,7 @@ namespace DBDG
 
   class ALMusicManager : public MusicManager
   {
-    ALMusicManager() { }
+    ALMusicManager():MusicManager() { }
     ~ALMusicManager() { };
     ALMusicManager(const ALMusicManager &other);
     ALMusicManager& operator=(const ALMusicManager &other);

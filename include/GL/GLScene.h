@@ -14,8 +14,7 @@ namespace DBDG
     GLGame *glGame;
   public:
   GLScene(GLGame *game)
-    :Scene(game)
-      ,glGame(game)
+    :Scene(game),glGame(game)
     {
     }  
     virtual void update(const float &deltaTime) = 0;

@@ -11,9 +11,6 @@ namespace DBDG
   
   class ALAudio : public Audio
   {
-    ALAudio()
-    {
-    }
     ALAudio(const ALAudio &other);
     ALAudio& operator=(const ALAudio& other);
   public:
@@ -22,8 +19,10 @@ namespace DBDG
       static ALAudio instance;
       return instance;
     }
-    virtual SoundManager& getSoundManager() const;
-    virtual MusicManager& getMusicManager() const;
+  ALAudio():Audio() { }
+    ~ALAudio() {}
+    SoundManager& getSoundManager() const;
+    MusicManager& getMusicManager() const;
   };
 }
 #endif

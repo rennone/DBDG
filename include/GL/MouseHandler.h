@@ -2,22 +2,30 @@
 #define DBDG_MOUSE_HANDLER_H
 
 #include <mutex>
-struct GLFWwindow;
+
 namespace DBDG
 {
   class MouseEvent;
   class MouseHandler
   {
-    //TODO use smart pointer
-    GLFWwindow *window;    
     MouseEvent *mouseEvent, *mouseEventBuffer;
     mutable std::mutex mtx_lock;
-  public:
-    MouseHandler(GLFWwindow *window);  
-    ~MouseHandler();  
+    
+    MouseHandler();
+    MouseHandler(const MouseHandler &other);
+    MouseHandler& operator=(const MouseHandler &other);
+    ~MouseHandler();      
+  public:    
+    static MouseHandler* getInstance()
+    {
+      static MouseHandler instance;
+      return &instance;
+    }    
     const MouseEvent* const getMouseEvent() const;
-    void onEvent(int button, int action, int mods);
-    void update();  
+    void onButtonEvent(const int &button, const int &action, const int &mods);
+    void onCursorEvent(const double &_x, const double &_y);
+    void onScrollEvent(const double &_offset_x, const double &_offset_y);
+    void update();
   };  
 }
 

@@ -1,56 +1,66 @@
-#ifndef DBDG_GL_LIGHTING_MANAGER_H
-#define DBDG_GL_LIGHTING_MANAGER_H
-/*
-#include "../Color4.hpp"
-#include "../math/Vector4.hpp"
+#ifndef DBDG_GL_LIGHT_MANAGER_H
+#define DBDG_GL_LIGHT_MANAGER_H
+
+#include "../../Color4.hpp"
+#include "../../math/Vector4.hpp"
 
 namespace DBDG
 {
-  struct GLLight
+  namespace Util
   {
-    Vector3 position;
-    Vector3 direction;
-    Color4 diffuse;
-    Color4 specular;
-    Color4 ambient;
-    unsigned short cutoff    = 180; //放射角度 0~90 or 180
-    float constantAttenuation  = 1; //一定減衰率 0~1
-    float linearAttenuation    = 0; //線形減衰率 0~1
-    float quadraticAttenuation = 0; //2次減衰率
-    bool enable = false;
-  };
+    struct GLLight
+    {
+      Vector3 position;
+      Vector3 direction;
+      Color4 diffuse;
+      Color4 specular;
+      Color4 ambient;
+      unsigned short cutoff    = 180; //放射角度 0~90 or 180
+      float constantAttenuation  = 1; //一定減衰率 0~1
+      float linearAttenuation    = 0; //線形減衰率 0~1
+      float quadraticAttenuation = 0; //2次減衰率
+      bool enable = false;
+    };
   
-  class GLLightingManager
-  {
-    enum struct COLOR
+    class LightManager
     {
-      DIFFUSE,
-        AMBIENT,
-        SPECULAR
-        };
+    public:
+      enum struct LightColor
+      {
+        Diffuse,
+          Ambient,
+          Specular
+          };
     
-    const unsinged int lightId[MAX_LIGHT_NUM];
-    bool lightState[MAX_LIGHT_NUM];
-  public:
-    static constexpr unsigned int MAX_LIGHT_NUM = 8;
-    static constexpr bool within(const unsigned int &id){
-      return id>=0 && id<MAX_LIGHT_NUM;
-    }
-    static LightingManager* getInstance()
-    {
-      static LightingManager instance;
-      return &instane;
-    }
-    bool setColor(const unsigned int &id, COLOR kind, const Color4 &color);
-    bool killLight(const unsigned int &id);
-    int getFreeLight();
-    bool setLight(const unsigned int &id, const Vector4 &position, const Vector4 &direction);
-  private:
-    LightingManager();
-    LightingManager(const LightingManager &other);    
-    ~LightingManager();
-    LightingManager& operator=(const LightingManager &other);
-  };
+      static constexpr unsigned int MAX_LIGHT_NUM = 8;
+
+
+      static LightManager* getInstance()
+      {
+        static LightManager instance;
+        return &instance;
+      }
+    
+      static constexpr bool within(const int &id){
+        return id<MAX_LIGHT_NUM;
+      }
+
+      bool setLightPos(const int &id, const Vector3 &position, const Vector3 &direction);
+      bool setLightColor(const int &id, LightColor kind, const Color4 &color);
+      bool killLight(const int &id);
+      void killAllLight();
+      int getFreeLight() const;
+
+    private:
+      unsigned int lightState; //各ビットが使用中かを表す. 1=使用中
+      unsigned int lightId[MAX_LIGHT_NUM]; //idとGL_LIGHT_の対応テーブル
+    
+      LightManager();
+      LightManager(const LightManager &other);    
+      ~LightManager();
+      LightManager& operator=(const LightManager &other);
+    };
+  }
 }
-*/
+
 #endif

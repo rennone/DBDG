@@ -10,15 +10,12 @@
 
 //シングルトン用のマクロ
 #define g_KeyboardHandler KeyboardHandler::getInstance()
+#define g_MouseHandler MouseHandler::getInstance()
 
 namespace DBDG
 {
-  GLInput::GLInput(GLFWwindow* window)
-    :window(window)
+  GLInput::GLInput()
   {
-//    g_KeyboardHandler = std::unique_ptr<KeyboardHandler>(new KeyboardHandler());
-    mouseHandler    = std::unique_ptr<MouseHandler>(new MouseHandler(window));    
-    scrollHandler   = std::unique_ptr<ScrollHandler>(new ScrollHandler());
 
   }
   
@@ -29,8 +26,8 @@ namespace DBDG
   void GLInput::update()
   {
     g_KeyboardHandler->update();
-    mouseHandler->update();
-    scrollHandler->update();
+    g_MouseHandler->update();
+//    scrollHandler->update();
   }
 
   bool GLInput::isAnyKeyPressed() const
@@ -55,35 +52,41 @@ namespace DBDG
 
   const MouseEvent* const GLInput::getMouseEvent() const
   {
-    return mouseHandler->getMouseEvent();
+    return g_MouseHandler->getMouseEvent();
   }
 
+  //TODO
   const ScrollEvent* const GLInput::getScrollEvent() const
   {
-    return scrollHandler->getScrollEvent();
+    return nullptr;//g_ScrollHandler->getScrollEvent();
   }
 
   Vector2 GLInput::getCursorPos() const
   {
-    double x,y;
-    glfwGetCursorPos(window, &x, &y);
+    const auto mouse_event = g_MouseHandler->getMouseEvent();
     
-    return Vector2((float)x, (float)y);
+    return Vector2((float)mouse_event->x, (float)mouse_event->y);
   }
 
-  void GLInput::onMouseCallback(const int &button, const int &action, const int &mods)
+  void GLInput::onMouseButtonCallback(const int &button, const int &action, const int &mods)
   {
-    mouseHandler->onEvent(button, action, mods);
+    g_MouseHandler->onButtonEvent(button, action, mods);
   }
 
-  void GLInput::onKeyCallback(const int &keyCode, const int &action, const int &mods)
+  void GLInput::onMouseCursorCallback(const double &_x, const double &_y)
   {
-    g_KeyboardHandler->onEvent(keyCode, action, mods);
+    g_MouseHandler->onCursorEvent(_x, _y);
   }
 
   void GLInput::onScrollCallback(const double &offsetX,const double &offsetY)
   {
-    scrollHandler->onEvent(offsetX, offsetY);
+    g_MouseHandler->onScrollEvent(offsetX, offsetY);
   }
+  
+  void GLInput::onKeyCallback(const int &keyCode, const int &action, const int &mods)
+  {
+    g_KeyboardHandler->onEvent(keyCode, action, mods);
+  }
+  
 }
 

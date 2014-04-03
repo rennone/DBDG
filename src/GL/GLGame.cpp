@@ -6,50 +6,75 @@
 #include <GL/GLGame.h>
 #include <AL/ALAudio.h>
 
+#define g_GLInput GLInput::getInstance()
+/*
+    static void error_callback(int error, const char* description);
+    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void mouseCallback(GLFWwindow* window, int button, int action, int mods);
+    static void cursorPosCallback(GLFWwindow* window, double _x, double _y);
+    static void cursorEnterCallback(GLFWwindow* window, int entered);
+    static void scrollCallback(GLFWwindow* window, double offsetX, double offsetY);
+    static void resize_callback(GLFWwindow* window, int width, int height);
+*/
 namespace DBDG
 {
   //GLFW用のコールバック設定
-  void GLGame::error_callback(int error, const char* description)
+  void error_callback(int error, const char* description)
   {
     fputs(description, stderr);
   }
   
-  void GLGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+  void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
   {
     DBDG::GLGame*   game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
-    DBDG::GLInput* input = (DBDG::GLInput*)game->getInput();
-    input->onKeyCallback(key, action, mods);
+    DBDG::GLInput& input = (DBDG::GLInput&)game->getInput();
+    input.onKeyCallback(key, action, mods);
   }
   
-  void GLGame::mouseCallback(GLFWwindow* window, int button, int action, int mods)
+  void mouseCallback(GLFWwindow* window, int button, int action, int mods)
   {
     DBDG::GLGame*   game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
-    DBDG::GLInput* input = (DBDG::GLInput*)game->getInput();
-    input->onMouseCallback(button, action, mods);
-  }
-  
-  void GLGame::scrollCallback(GLFWwindow* window, double offsetX, double offsetY)
-  {
-    DBDG::GLGame*   game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
-    DBDG::GLInput* input = (DBDG::GLInput*)game->getInput();
-    input->onScrollCallback(offsetX, offsetY);
+    DBDG::GLInput& input = (DBDG::GLInput&)game->getInput();
+    input.onMouseButtonCallback(button, action, mods);
   }
 
-  void GLGame::resize_callback(GLFWwindow* window, int width, int height)
+  void cursorPosCallback(GLFWwindow* _window, double _x, double _y)
   {
-    DBDG::GLGame* game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
-    auto scene = game->getCurrentScene();
-    scene->reshape(width, height);
+    DBDG::GLGame*   game = (DBDG::GLGame*)glfwGetWindowUserPointer(_window);
+    DBDG::GLInput& input = (DBDG::GLInput&)game->getInput();
+    input.onMouseCursorCallback(_x, _y);
+  }
+
+  //カーソルがウィンドウに入った(GL_TRUE)or出て行った(GL_FALSE)時に呼ばれる
+  void cursorEnterCallback(GLFWwindow* _window, int entered)
+  {
+    
   }
   
+  void scrollCallback(GLFWwindow* window, double offsetX, double offsetY)
+  {
+    DBDG::GLGame*   game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
+    DBDG::GLInput& input = (DBDG::GLInput&)game->getInput();
+    input.onScrollCallback(offsetX, offsetY);
+  }
+
+  void resize_callback(GLFWwindow* window, int width, int height)
+  {
+    DBDG::GLGame* game = (DBDG::GLGame*)glfwGetWindowUserPointer(window);
+    Scene &scene = game->getCurrentScene();
+    scene.reshape(width, height);
+  }
+}
+
+namespace DBDG
+{
   GLGame::GLGame
   (int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen)
     :scene(NULL), nextScene(NULL)
-  {
-    
+  {    
     if(argc > 0)
     {
-      FileIO::getInstance()->setRootDirectory(FileIO::getSuperiorFolderPath(argv[0]));
+      FileIO::getInstance().setRootDirectory(FileIO::getSuperiorFolderPath(argv[0]));
     }
     
     glutInit(&argc, argv);
@@ -75,38 +100,40 @@ namespace DBDG
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this); //このwindowにコールバック用に自身を登録
 
-    //glewはglfwMakeContextCurrentの後でなければならないらしい
+    //glewInitはglfwMakeContextCurrentの後でなければならないらしい
     if( glewInit() != GLEW_OK )
     {
       std::cerr << "cannot start glew" << std::endl;
       exit(2);
     }
 
-    input  = new GLInput(window);
-    audio  = &ALAudio::getInstance();
-    graphic = GLGraphic::getInstance();
+    input   = new GLInput();
+    audio   = &ALAudio::getInstance();
+    graphic = new GLGraphic();//GLGraphic::getInstance();
 
     glfwSetKeyCallback(window, keyCallback);
     glfwSetMouseButtonCallback(window, mouseCallback);
+    glfwSetCursorPosCallback(window,cursorPosCallback);
+    glfwSetCursorEnterCallback(window,cursorEnterCallback);
     glfwSetScrollCallback(window, scrollCallback);
-    glfwSetFramebufferSizeCallback(window, resize_callback);
-        
+    glfwSetFramebufferSizeCallback(window, resize_callback);        
   };
 
   GLGame::~GLGame()
   {
-    delete input;
-    /* 
-       delete audio;
-    */
-    scene->dispose();  
-    delete scene;
+    scene->dispose();
+
+    if(scene != nullptr)
+      delete scene;
+    
+    if(nextScene != nullptr)
+      delete nextScene;
   };
   
   bool GLGame::setScene(Scene *scene)
   {
     //NULLを指定しようとしたらfalse
-    if(scene == NULL)
+    if(scene == nullptr)
     {
       return false;
     }
@@ -140,24 +167,24 @@ namespace DBDG
     }
   }
 
-  Input* const GLGame::getInput() const
+  Input& GLGame::getInput() const
   {
-    return input;
+    return *input;
   }
 
-  Audio* const GLGame::getAudio()  const
+  Audio& GLGame::getAudio()  const
   {
-    return audio;
+    return *audio;
   }
 
-  Graphic* const GLGame::getGraphic() const
+  Graphic& GLGame::getGraphic() const
   {
-    return graphic;
+    return *graphic;
   }
   
-  Scene* const GLGame::getCurrentScene() const
+  Scene& GLGame::getCurrentScene() const
   {
-    return scene;
+    return *scene;
   }
 
 //glfwの関数を扱う関係でconstにできない

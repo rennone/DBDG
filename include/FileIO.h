@@ -17,10 +17,12 @@ namespace DBDG
     
     FileIO(const FileIO &other);
     FileIO& operator=(const FileIO &other);
+    
   public:
-    static FileIO* getInstance()  {
+    static FileIO& getInstance()
+    {
       static FileIO instance;
-      return &instance;
+      return instance;
     }
 
     FILE* fileOpen(const std::string file_name, const char* mode);

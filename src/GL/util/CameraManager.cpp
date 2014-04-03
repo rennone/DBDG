@@ -75,8 +75,8 @@ namespace DBDG
     
     void CameraManager::checkMouse(const float &delta_time_sec)
     {
-      auto input = glGame->getInput();
-      auto mouseEvent = input->getMouseEvent();
+      Input &input = glGame->getInput();
+      auto mouseEvent = input.getMouseEvent();
       static Vector2 prevTouchPoint(mouseEvent->x, mouseEvent->y);
       
       if(mouseEvent->action == GLFW_RELEASE)
@@ -106,8 +106,8 @@ namespace DBDG
       const int yaw_move   = ceil(yawSpeed_per_sec*delta_time_sec);
       const int pitch_move = ceil(pitchSpeed_per_sec*delta_time_sec);
       const int radius_move=  ceil(zoomSensitivity*delta_time_sec);
-      auto input = glGame->getInput();
-      auto keyEvents = input->getKeyEvents();
+      auto &input = glGame->getInput();
+      auto keyEvents = input.getKeyEvents();
       int delta_yaw = 0, delta_pitch = 0, delta_radius = 0;
       for(auto &event : keyEvents)
       {

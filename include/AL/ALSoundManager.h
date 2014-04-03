@@ -20,7 +20,7 @@ namespace DBDG
 
   class ALSoundManager : public SoundManager
   {
-    ALSoundManager() { }
+  ALSoundManager():SoundManager() { }
     ~ALSoundManager() { };
     ALSoundManager(const ALSoundManager &other);
     ALSoundManager& operator=(const ALSoundManager &other);

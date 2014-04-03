@@ -20,6 +20,7 @@ namespace DBDG
     int modifier; //Shift, Ctrl, Alt, Superキー用
     double x, y;
     double velosityX, velosityY;
+    double scrollOffsetX, scrollOffsetY;
   };
 
   class ScrollEvent
@@ -33,6 +34,8 @@ namespace DBDG
 
   class Input
   {
+    Input(const Input&);
+    Input& operator=(const Input&);
   public:
     Input(){}
     virtual ~Input(){}

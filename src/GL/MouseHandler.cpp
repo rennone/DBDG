@@ -4,12 +4,11 @@
 
 namespace DBDG
 {
-  MouseHandler::MouseHandler(GLFWwindow *_window)
-    :window(_window)
+  MouseHandler::MouseHandler()   
   {
     std::lock_guard<std::mutex> lock(mtx_lock);
     
-    mouseEvent = new MouseEvent();
+    mouseEvent       = new MouseEvent();
     mouseEventBuffer = new MouseEvent();
   }
 
@@ -28,7 +27,7 @@ namespace DBDG
     return mouseEvent;
   }
 
-  void MouseHandler::onEvent(int button, int action, int mods)
+  void MouseHandler::onButtonEvent(const int &button, const int &action, const int &mods)
   {
     std::lock_guard<std::mutex> lock(mtx_lock);
     
@@ -37,14 +36,35 @@ namespace DBDG
     mouseEventBuffer->modifier = mods; 
   }
 
+  void MouseHandler::onCursorEvent(const double &_x, const double &_y)
+  {
+    std::lock_guard<std::mutex> lock(mtx_lock);
+    mouseEventBuffer->x = _x;
+    mouseEventBuffer->y = _y;
+  }
+
+  void MouseHandler::onScrollEvent(const double &_offset_x, const double &_offset_y)
+  {
+    std::lock_guard<std::mutex> lock(mtx_lock);
+    mouseEventBuffer->scrollOffsetX = _offset_x;
+    mouseEventBuffer->scrollOffsetY = _offset_y;
+  }
+  
   void MouseHandler::update()
   {
     std::lock_guard<std::mutex> lock(mtx_lock);
-  
-    mouseEvent->button   = mouseEventBuffer->button;  //中身をコピー
-    mouseEvent->action   = mouseEventBuffer->action;  //中身をコピー
-    mouseEvent->modifier = mouseEventBuffer->modifier;
-    glfwGetCursorPos(window, &mouseEvent->x, &mouseEvent->y);
+
+    //カーソルの差分を計算
+    mouseEvent->velosityX     = mouseEventBuffer->x - mouseEvent->x;
+    mouseEvent->velosityY     = mouseEventBuffer->y - mouseEvent->y;
+    //バッファをコピー
+    mouseEvent->x             = mouseEventBuffer->x;
+    mouseEvent->y             = mouseEventBuffer->y;
+    mouseEvent->button        = mouseEventBuffer->button;
+    mouseEvent->action        = mouseEventBuffer->action;
+    mouseEvent->modifier      = mouseEventBuffer->modifier;
+    mouseEvent->scrollOffsetX = mouseEventBuffer->scrollOffsetX;
+    mouseEvent->scrollOffsetY = mouseEventBuffer->scrollOffsetY;
   
     if(mouseEventBuffer->action == GLFW_PRESS)
       mouseEventBuffer->action = GLFW_REPEAT;  

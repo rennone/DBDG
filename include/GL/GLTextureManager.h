@@ -22,14 +22,14 @@ namespace DBDG
     };
     
   public:
-    static GLTextureManager* getInstance()
+    static GLTextureManager& getInstance()
     {
       static GLTextureManager instance;
-      return &instance;
+      return instance;
     }
     Texture* newTexture(const std::string &file_name) const;
   private:
-    GLTextureManager(){}
+  GLTextureManager():TextureManager(){};
     GLTextureManager(const GLTextureManager &other);
     GLTextureManager& operator=(const GLTextureManager &other);
   };

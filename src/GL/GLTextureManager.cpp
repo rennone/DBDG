@@ -7,7 +7,7 @@ namespace DBDG
 {
   Texture* GLTextureManager::newTexture(const std::string &file_name) const
   {
-    std::string full_path = FileIO::getInstance()->getRootDirectory() + file_name;
+    std::string full_path = FileIO::getInstance().getRootDirectory() + file_name;
     return new GLTextureManager::GLTexture(full_path);
   }
 

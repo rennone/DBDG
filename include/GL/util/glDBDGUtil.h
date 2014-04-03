@@ -8,5 +8,6 @@
 #include "QuarterViewCamera.h"
 #include "CameraManager.h"
 #include "SimpleGLFunction.h"
+#include "LightManager.h"
 
 #endif

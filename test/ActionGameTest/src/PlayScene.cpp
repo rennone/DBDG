@@ -8,31 +8,22 @@ using DBDG::Util::HasPosition;
 static void LightSetting()
 {
   glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHT1);
-  glEnable(GL_LIGHT2);
-  glEnable(GL_LIGHT3);
 
+  using DBDG::Vector3;
   float edge = 800;
-  GLfloat lightpos1[] = { 0.0, edge/2, 0.0, 1.0 };
-  GLfloat lightdir1[] = { 1.0, -1.0, 1.0, 1.0 };
-  glLightfv(GL_LIGHT0, GL_POSITION, lightpos1);
-  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightdir1);
+  auto lightManager = DBDG::Util::LightManager::getInstance();
+  auto free = lightManager->getFreeLight();
+  lightManager->setLightPos(free, Vector3(0.0, edge/2, 0.0), Vector3(1.0, -1.0, 1.0));
   
-  GLfloat lightpos2[] = { edge, edge/2, edge, 1.0 };
-  GLfloat lightdir2[] = { -1.0, -1.0, -1.0, 1.0 };
-  glLightfv(GL_LIGHT1, GL_POSITION, lightpos2);
-  glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lightdir2);
- 
-  GLfloat lightpos3[] = { 0.0, edge/2, edge, 1.0 };
-  GLfloat lightdir3[] = { 1.0, -1.0, -1.0, 1.0 };
-  glLightfv(GL_LIGHT2, GL_POSITION, lightpos3);
-  glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lightdir3);
- 
-  GLfloat lightpos4[] = { edge, edge/2, 0.0, 1.0 };
-  GLfloat lightdir4[] = { -1.0, -1.0, 1.0, 1.0 };
-  glLightfv(GL_LIGHT4, GL_POSITION, lightpos4);
-  glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightdir4); 
+  free = lightManager->getFreeLight();
+  lightManager->setLightPos(free, Vector3(edge, edge/2, edge), Vector3(-1.0, -1.0, -1.0));
+
+  free = lightManager->getFreeLight();
+  lightManager->setLightPos(free, Vector3(0.0, edge/2, edge), Vector3(1.0, -1.0, -1.0));
+
+  free = lightManager->getFreeLight();
+  lightManager->setLightPos(free, Vector3(edge, edge/2, 0.0), Vector3(-1.0, -1.0, 1.0));
+
 }
 
 class Player : public  DBDG::Util::Movable
@@ -88,7 +79,7 @@ public:
 
   void update(const float &delta_time_sec)
   {  
-    auto input = glGame->getInput();
+    auto &input = glGame->getInput();
     const float speed = 500*delta_time_sec;
 
     auto direction = DBDG::Vector3(0,0,0);
@@ -98,22 +89,22 @@ public:
 
     auto dirX = dirZ.cross(cameraMgr->getCamera()->getUp());
     bool isMoved = false;
-    if(input->getKeyState(GLFW_KEY_W) != GLFW_RELEASE)
+    if(input.getKeyState(GLFW_KEY_W) != GLFW_RELEASE)
     {
       direction += dirZ;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_S) != GLFW_RELEASE)
+    if(input.getKeyState(GLFW_KEY_S) != GLFW_RELEASE)
     {
       direction -= dirZ;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_D) != GLFW_RELEASE)
+    if(input.getKeyState(GLFW_KEY_D) != GLFW_RELEASE)
     {
       direction += dirX;
       isMoved = true;
     }
-    if(input->getKeyState(GLFW_KEY_A) != GLFW_RELEASE)
+    if(input.getKeyState(GLFW_KEY_A) != GLFW_RELEASE)
     {
       direction -= dirX;
       isMoved = true;
@@ -151,7 +142,7 @@ void PlayScene::update(const float &delta_time_sec)
 {
   elapsedTime_sec += delta_time_sec;
   
-  auto events = glGame->getInput()->getKeyEvents();
+  auto events = glGame->getInput().getKeyEvents();
   for( auto event : events )
   {
     if(event->action != GLFW_PRESS)

@@ -5,7 +5,6 @@
 #include "../math/Vector2.hpp"
 #include <memory>
 
-struct GLFWwindow;
 namespace DBDG
 {
   class GLGame;
@@ -16,21 +15,16 @@ namespace DBDG
   
   class GLInput : public Input
   {
-    friend class GLGame;  
-    GLFWwindow  *window;
-
-    
-    std::unique_ptr<MouseHandler>      mouseHandler;
-    //std::unique_ptr<KeyboardHandler>   keyboardHandler;
-    std::unique_ptr<ScrollHandler>     scrollHandler;
-    
+    friend class GLGame;
 //    std::unique_ptr<LeapMotionHandler> leapMotionHandler;
+    
+    GLInput(const GLInput &other);
+    GLInput& operator=(const GLInput &other);
+    ~GLInput();
+    //イベント発生時にGameクラスから呼ばれる
 
   public:
-    GLInput(GLFWwindow *window);  
-    ~GLInput();  
-
-    void update();    
+    GLInput();
     bool isAnyKeyPressed() const;
     bool isKeyPressed(const int &keyCode) const;
     int getKeyState(const int &keyCode) const;
@@ -39,10 +33,11 @@ namespace DBDG
     const ScrollEvent* const getScrollEvent() const;
     Vector2 getCursorPos() const;
 
-    //イベント発生時にGameクラスから呼ばれる
-    void onMouseCallback(const int &button,const int &action,const int &mods);
+    void update();
+    void onMouseButtonCallback(const int &button,const int &action,const int &mods);
+    void onMouseCursorCallback(const double &_x, const double &_y);
     void onKeyCallback(const int &keyCode,const int &action,const int &mods);
-    void onScrollCallback(const double &offsetX,const double &offsetY);
+    void onScrollCallback(const double &offsetX,const double &offsetY);    
   };  
 }
 
