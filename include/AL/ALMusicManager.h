@@ -30,7 +30,7 @@ namespace DBDG
       return instance;
     }
 
-    Music* newMusic(const std::string &file_name);
+    Music* newMusic(const std::string &file_name) const;
   };
 }
 

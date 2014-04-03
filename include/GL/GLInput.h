@@ -16,13 +16,11 @@ namespace DBDG
   class GLInput : public Input
   {
     friend class GLGame;
-//    std::unique_ptr<LeapMotionHandler> leapMotionHandler;
     
     GLInput(const GLInput &other);
     GLInput& operator=(const GLInput &other);
     ~GLInput();
     //イベント発生時にGameクラスから呼ばれる
-
   public:
     GLInput();
     bool isAnyKeyPressed() const;

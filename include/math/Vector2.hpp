@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 namespace DBDG
 {
@@ -242,8 +243,15 @@ namespace DBDG
     //画面への出力
     friend std::ostream& operator<<(std::ostream& s, const Vector2 &v)
     {
-      return s << "(" << v.x << "," << v.y << ")" << std::endl;
+      return s << "(" << v.x << "," << v.y << ")";
     }
+
+    /*
+    friend std::stringstream& operator<<(std::stringstream& s, const Vector2 &v)
+    {
+      return s << "(" << v.x << "," << v.y << ")";
+    }
+    */
   };
 }
 #endif

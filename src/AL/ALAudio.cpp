@@ -5,12 +5,21 @@
 
 namespace DBDG
 {
-  SoundManager& ALAudio::getSoundManager() const
+  ALAudio::ALAudio()
+    :Audio()
+  {
+  }
+  
+  ALAudio::~ALAudio()
+  {
+  }
+  
+  const SoundManager& ALAudio::getSoundManager() const
   {
     return ALSoundManager::getInstance();
   }
   
-  MusicManager& ALAudio::getMusicManager() const
+  const MusicManager& ALAudio::getMusicManager() const
   {
     return ALMusicManager::getInstance();
   }

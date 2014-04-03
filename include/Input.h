@@ -47,8 +47,6 @@ namespace DBDG
     virtual const MouseEvent*  const getMouseEvent() const = 0;
     virtual const ScrollEvent* const getScrollEvent() const = 0;
     virtual const std::vector<KeyEvent*>& getKeyEvents() const = 0;
-
-    //virtual LeapMotionHandler* getLeapMotionHandler() const = 0;  
   };
 }
 

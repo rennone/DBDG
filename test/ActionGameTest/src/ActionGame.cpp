@@ -12,7 +12,7 @@ public :
   ActionGame(int argc, char **argv, const std::string title, const int window_widht, const int window_height)
     :GLGame(argc, argv, title, window_widht, window_height, false)
   {
-    Assets::loadAssets();    
+    Assets::loadAssets(this);
   }
   
   DBDG::Scene* getStartScene()

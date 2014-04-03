@@ -9,7 +9,7 @@ file(GLOB srcFile ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 #c++0x対応オプション
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -pedantic -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -W")
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 set(CMAKE_BUILD_TYPE release)
@@ -41,6 +41,7 @@ add_executable(${Project} ${srcFile})
 target_link_libraries(${Project} ${OPENGL_gl_LIBRARY} glut glfw3 glew m)
 target_link_libraries(${Project} alut ${OPENAL_LIBRARY})
 target_link_libraries(${Project} assimp.3.0.255)
+target_link_libraries(${Project} Leap)
 target_link_libraries(${Project} django)
 
 

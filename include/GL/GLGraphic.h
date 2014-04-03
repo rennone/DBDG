@@ -16,12 +16,12 @@ namespace DBDG
       return instance;
     }
   GLGraphic():Graphic(){}
-    TextureManager& getTextureManager() const
+    const TextureManager& getTextureManager() const
     {
       return GLTextureManager::getInstance();
     }
     
-    ModelManager& getModelManager() const
+    const ModelManager& getModelManager() const
     {
       return GLModelManager::getInstance();
     }    

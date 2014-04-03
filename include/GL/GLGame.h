@@ -17,18 +17,25 @@ namespace DBDG
   class GLGame: public Game
   {
   public:
-    GLGame(int argc, char **argv, std::string window_title);
-    GLGame(int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen=false);
+    GLGame(int argc, char **argv, const std::string &window_title, bool);
+    GLGame(int argc, char **argv, const std::string &window_title,
+           const int &window_width, const int &window_height, const bool &is_fullscreen=false);
     virtual ~GLGame();
     void loop(const float &delta_time_sec);
     bool setScene(Scene *scene);
-    Input&   getInput() const;
-    Audio&   getAudio() const;
-    Graphic& getGraphic() const;
+    const Input&   getInput() const;
+    const Audio&   getAudio() const;
+    const Graphic& getGraphic() const;
     Scene&   getCurrentScene() const;
-    GLFWwindow* getWindow() const;   //glfwの関数を扱う関係でconstにできない
+    GLFWwindow* getWindow() const;//glfwの関数を扱う関係でconstにできない
+
   private:
     GLFWwindow *window;
+
+#ifdef DBDG_DEBUG    
+    GLFWwindow *debugWindow;
+#endif
+    
     GLInput *input;
     Audio *audio;
     Graphic *graphic;

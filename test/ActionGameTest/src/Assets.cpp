@@ -4,14 +4,19 @@
 DBDG::Model* Assets::gargoyle = NULL;
 DBDG::Sound* Assets::akan = NULL;
 DBDG::SpriteAnimation* Assets::animation = nullptr;
-void Assets::loadAssets()
+
+void Assets::loadAssets(const DBDG::Game* game)
 {
+  const DBDG::ModelManager& model_mgr= game->getGraphic().getModelManager();
+  const DBDG::TextureManager& texture_mgr = game->getGraphic().getTextureManager();
+  const DBDG::SoundManager& sound_mgr = game->getAudio().getSoundManager();
+  
   std::string gar = "resource/gargoyle/gargoyle.x";
   std::string tes = "resource/dragon.x";
-  gargoyle =  DBDG::GLGraphic::getInstance().getModelManager().newModel(tes, 1);
-  akan     = DBDG::ALAudio::getInstance().getSoundManager().newSound("resource/Akan00.wav");
+  gargoyle =  model_mgr.newModel(tes, 1);
+  akan     = sound_mgr.newSound("resource/Akan00.wav");
 
-  auto texture = DBDG::GLGraphic::getInstance().getTextureManager().newTexture("resource/fieldAtlas.png");
+  auto texture = texture_mgr.newTexture("resource/fieldAtlas.png");
   std::vector<DBDG::TextureRegion*> region;
 
   int size = 64;

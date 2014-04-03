@@ -8,10 +8,10 @@ PROJECT(${Project})
 
 #c++11対応オプション
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS -static")
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS -static")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS -DDBDG_DEBUG -static ")
 set(CMAKE_CXX_FLAGS "-std=c++11") 
 
-set(CMAKE_BUILD_TYPE release)
+set(CMAKE_BUILD_TYPE debug)
 set(serial "1.0.0")
 
 include_directories("../include")
@@ -54,14 +54,16 @@ endif(NOT OPENAL_FOUND)
 
 #cppファイルをまとめて, Projetへリンク
 file(GLOB src ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp)
+file(GLOB leapSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/leap/*.cpp) #LeapMotin
 file(GLOB alSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/AL/*.cpp) #AL関連
 file(GLOB glSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/*.cpp) #GL関連
 file(GLOB glUtilSrc ${CMAKE_CURRENT_SOURCE_DIR}/../src/GL/util/*.cpp) #glUtil
 
-ADD_LIBRARY(${Project} STATIC ${src} ${glSrc} ${alSrc} ${glUtilSrc})
 
-# TODO OpenGLとかを, django一つにまとめられない => DLLをスタティックにリンクしてない???
-TARGET_LINK_LIBRARIES(${Project} glut glfw3 GLEW ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} alut ${OPENAL_LIBRARY} assimp.3.0.255 m)
+ADD_LIBRARY(${Project} STATIC ${src} ${glSrc} ${alSrc} ${glUtilSrc} ${leapSrc})
+
+# TODO OpenGLとかを django一つにまとめられない => ライブラリ中で使っている関数はリンクされているので, 必要分しかリンクされていないのかもしれない.
+#TARGET_LINK_LIBRARIES(${Project} glut glfw3 GLEW ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} alut ${OPENAL_LIBRARY} assimp.3.0.255 m)
 
 install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-#install(TARGETS ${Project} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../test/ActionGameTest)
+

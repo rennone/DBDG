@@ -31,7 +31,7 @@ namespace DBDG
       return instance;
     }
 
-    Sound* newSound(const std::string &file_name);
+    Sound* newSound(const std::string &file_name) const;
   };
 }
 #endif

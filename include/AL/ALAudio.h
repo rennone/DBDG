@@ -11,6 +11,7 @@ namespace DBDG
   
   class ALAudio : public Audio
   {
+    //コピー不可にする
     ALAudio(const ALAudio &other);
     ALAudio& operator=(const ALAudio& other);
   public:
@@ -19,10 +20,10 @@ namespace DBDG
       static ALAudio instance;
       return instance;
     }
-  ALAudio():Audio() { }
-    ~ALAudio() {}
-    SoundManager& getSoundManager() const;
-    MusicManager& getMusicManager() const;
+    ALAudio();
+    ~ALAudio();
+    const SoundManager& getSoundManager() const;
+    const MusicManager& getMusicManager() const;
   };
 }
 #endif

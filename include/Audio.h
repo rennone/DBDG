@@ -34,7 +34,7 @@ namespace DBDG
   public:
     SoundManager(){}
     virtual ~SoundManager(){}
-    virtual Sound* newSound(const std::string &fileName) = 0;    
+    virtual Sound* newSound(const std::string &fileName) const = 0;
   };
 
   class MusicManager
@@ -44,7 +44,7 @@ namespace DBDG
   public:
     MusicManager(){}
     virtual ~MusicManager(){}
-    virtual Music* newMusic(const std::string &fileName) = 0;
+    virtual Music* newMusic(const std::string &fileName) const = 0;
   };
   
   class Audio
@@ -54,8 +54,8 @@ namespace DBDG
   public:
     Audio(){}
     virtual ~Audio(){}
-    virtual SoundManager& getSoundManager() const = 0;
-    virtual MusicManager& getMusicManager() const = 0;
+    virtual const SoundManager& getSoundManager() const = 0;
+    virtual const MusicManager& getMusicManager() const = 0;
   };
 }
 #endif

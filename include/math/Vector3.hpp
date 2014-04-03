@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 namespace DBDG
 {
@@ -254,8 +255,14 @@ namespace DBDG
 
     friend std::ostream& operator<<(std::ostream &s, const Vector3 &rhs)
     {
-      return s << "(" << rhs.x << "," << rhs.y << "," << rhs.z << ")" << std::endl;
+      return s << "(" << rhs.x << "," << rhs.y << "," << rhs.z << ")";
     }
+    /*
+    friend std::stringstream& operator<<(std::stringstream& s, const Vector3 &rhs)
+    {
+      return s << "(" << rhs.x << "," << rhs.y << "," << rhs.z << ")";
+    }
+    */
   };
 }
 #endif

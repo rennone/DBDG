@@ -1,4 +1,9 @@
 #include <GL/util/glDBDGUtil.h>
+#include <leap/LeapMotionHandler.h>
+#include <leap/Leap/Leap.h>
+
+#include <iostream>
+
 #include "PlayScene.h"
 #include "Assets.h"
 
@@ -150,6 +155,18 @@ void PlayScene::update(const float &delta_time_sec)
 //    Assets::akan->play();
   }
 
+  static DBDG::LeapMotionHandler leapHandler;
+  auto frame = leapHandler.getFrame();
+  if( frame.hands().count() != 0)
+  {
+    auto firstHand = frame.hands()[0];
+    for(const auto &point : firstHand.pointables())
+    {
+      std::cout << point.tipVelocity()[0] << "," << point.tipVelocity()[1] << std::endl;
+    }
+
+  }
+  
   root->update(delta_time_sec);
 }
 

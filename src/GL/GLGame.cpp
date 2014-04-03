@@ -69,7 +69,7 @@ namespace DBDG
 namespace DBDG
 {
   GLGame::GLGame
-  (int argc, char **argv, std::string window_title, int window_width, int window_height, bool is_fullscreen)
+  (int argc, char **argv, const std::string &window_title, const int &window_width, const int &window_height, const bool &is_fullscreen)
     :scene(NULL), nextScene(NULL)
   {    
     if(argc > 0)
@@ -89,14 +89,28 @@ namespace DBDG
 
     //windowを生成
     auto _monitor = is_fullscreen ? glfwGetPrimaryMonitor() : NULL;
-    window = glfwCreateWindow(window_width, window_height, window_title.c_str(), _monitor, NULL);  
+    window = glfwCreateWindow(window_width, window_height, window_title.c_str(), _monitor, NULL);
+
+
     if(!window)
     {
       std::cerr << "cannot open glfw window" << std::endl;
       glfwTerminate();
       exit(EXIT_FAILURE);
     }
-
+    
+    //デバッグスクリーンの生成
+#ifdef DBDG_DEBUG
+    
+    debugWindow = glfwCreateWindow(200, 100, "debug screen", NULL, NULL);
+    if(!debugWindow)
+    {
+      std::cerr << "cannot open glfw debug window" << std::endl;
+      glfwTerminate();
+      exit(EXIT_FAILURE);
+    }
+#endif
+    
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this); //このwindowにコールバック用に自身を登録
 
@@ -108,8 +122,8 @@ namespace DBDG
     }
 
     input   = new GLInput();
-    audio   = &ALAudio::getInstance();
-    graphic = new GLGraphic();//GLGraphic::getInstance();
+    audio   = new ALAudio();
+    graphic = new GLGraphic();
 
     glfwSetKeyCallback(window, keyCallback);
     glfwSetMouseButtonCallback(window, mouseCallback);
@@ -167,17 +181,17 @@ namespace DBDG
     }
   }
 
-  Input& GLGame::getInput() const
+  const Input& GLGame::getInput() const
   {
     return *input;
   }
 
-  Audio& GLGame::getAudio()  const
+  const Audio& GLGame::getAudio()  const
   {
     return *audio;
   }
 
-  Graphic& GLGame::getGraphic() const
+  const Graphic& GLGame::getGraphic() const
   {
     return *graphic;
   }

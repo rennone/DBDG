@@ -37,9 +37,9 @@ namespace DBDG
     ~KeyboardHandler();
     
     bool isAnyKeyPressed();
-    bool isKeyPressed(int keyCode);  
+    bool isKeyPressed(int keyCode);
     int getKeyState(int keyCode);
-    const std::vector<KeyEvent*>& getKeyEvents();  
+    const std::vector<KeyEvent*>& getKeyEvents();
     void onEvent(const int &keyCode,const int &action, const int &mods);
     void update();
   };

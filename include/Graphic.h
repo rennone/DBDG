@@ -34,8 +34,8 @@ namespace DBDG
     Graphic& operator=(const Graphic &);
   public:
     Graphic(){}
-    virtual TextureManager& getTextureManager() const = 0;
-    virtual ModelManager&   getModelManager()   const = 0;
+    virtual const TextureManager& getTextureManager() const = 0;
+    virtual const ModelManager&   getModelManager()   const = 0;
   };  
 }
 

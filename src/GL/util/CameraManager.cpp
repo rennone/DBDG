@@ -75,7 +75,7 @@ namespace DBDG
     
     void CameraManager::checkMouse(const float &delta_time_sec)
     {
-      Input &input = glGame->getInput();
+      const Input &input = glGame->getInput();
       auto mouseEvent = input.getMouseEvent();
       static Vector2 prevTouchPoint(mouseEvent->x, mouseEvent->y);
       

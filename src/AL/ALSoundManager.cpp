@@ -23,7 +23,7 @@ namespace DBDG
   {
   }
 
-  Sound* ALSoundManager::newSound(const std::string &file_name)
+  Sound* ALSoundManager::newSound(const std::string &file_name) const
   {
     return new ALSound(file_name);
   }

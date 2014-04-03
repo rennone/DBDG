@@ -4,6 +4,11 @@
 #include <GL/glDBDG.h>
 #include <AL/ALAudio.h>
 
+namespace DBDG
+{
+  class Game;
+}
+
 class Assets
 {
 public:
@@ -11,7 +16,7 @@ public:
   static DBDG::Sound *akan;
   static DBDG::SpriteAnimation *animation;
   
-  static void loadAssets();
+  static void loadAssets(const DBDG::Game* game);
 
 private:
   Assets();  
