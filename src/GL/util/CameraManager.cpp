@@ -29,7 +29,7 @@ namespace DBDG
       mouseRotateSensitivity = 2.0f;
     }
     
-    void CameraManager::changeTarget( std::shared_ptr<Movable> target)
+    void CameraManager::changeTarget( std::shared_ptr<HasPosition> target)
     {
       this->target = target;
     }    
@@ -39,7 +39,7 @@ namespace DBDG
       checkMouse(delta_time_sec);
       checkKeyboard(delta_time_sec);
   
-      if(doTraceTarget && target != NULL)
+      if(doTraceTarget && target != nullptr)
         camera->setLook(target->getPosition());
 
       camera->calcPosition();
@@ -118,7 +118,7 @@ namespace DBDG
           if(event->keyCode == switchTargetModeKey) {
             doTraceTarget = !doTraceTarget;
             return;
-          } else if(event->keyCode == moveToTargetKey && target != NULL) {
+          } else if(event->keyCode == moveToTargetKey && target != nullptr) {
             camera->setLook(target->getPosition());
           }
         }
@@ -139,7 +139,7 @@ namespace DBDG
 //回転可能かのチェックを行う為に, ラップ関数として用意している
     void CameraManager::rotateCamera(const int &delta_yaw, const int &delta_pitch)
     {
-      if(!doTraceTarget || target ==NULL)
+      if(!doTraceTarget || target == nullptr)
         return;
   
       camera->rotate(delta_yaw, delta_pitch);

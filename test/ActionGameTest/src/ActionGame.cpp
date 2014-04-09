@@ -9,8 +9,8 @@
 class ActionGame : public DBDG::GLGame
 {
 public :
-  ActionGame(int argc, char **argv, const std::string title, const int window_widht, const int window_height)
-    :GLGame(argc, argv, title, window_widht, window_height, false)
+  ActionGame(int argc, char **argv, const std::string title, const int window_width, const int window_height)
+    :GLGame(argc, argv, title, window_width, window_height, false)
   {
     Assets::loadAssets(this);
   }

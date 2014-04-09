@@ -1,6 +1,7 @@
 #ifndef UTIL_ACTOR_H
 #define UTIL_ACTOR_H
 
+#include <string>
 #include <vector>
 #include <memory>
 

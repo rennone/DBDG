@@ -41,7 +41,6 @@ add_executable(${Project} ${srcFile})
 target_link_libraries(${Project} ${OPENGL_gl_LIBRARY} glut glfw3 glew m)
 target_link_libraries(${Project} alut ${OPENAL_LIBRARY})
 target_link_libraries(${Project} assimp.3.0.255)
-target_link_libraries(${Project} Leap)
 target_link_libraries(${Project} django)
 
 

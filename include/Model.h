@@ -25,7 +25,7 @@ namespace DBDG
     virtual void renderWithAlpha(const float &alpha) const = 0;
     virtual void renderWithColor3(const Color3 &color) const = 0;
     virtual void renderWithColor4(const Color4 &color) const = 0;
-    virtual void load(const std::string&, const float&) = 0;
+    virtual void load(const std::string&) = 0;
     virtual void dispose() = 0;
   };
 }

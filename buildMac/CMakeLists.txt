@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2 -DDBDG_MAC_OS -static")
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDBDG_MAC_OS -DDBDG_DEBUG -static ")
 set(CMAKE_CXX_FLAGS "-std=c++11") 
 
-set(CMAKE_BUILD_TYPE debug)
+set(CMAKE_BUILD_TYPE release)
 set(serial "1.0.0")
 
 include_directories("../include")

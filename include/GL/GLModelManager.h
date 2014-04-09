@@ -23,7 +23,7 @@ namespace DBDG
       static GLModelManager instance;
       return instance;
     }
-    Model* newModel(const std::string &file_name, const float &scale) const;
+    Model* newModel(const std::string &file_name) const;
   private:
   GLModelManager():ModelManager(){};
     GLModelManager( const GLModelManager &other);
@@ -94,13 +94,13 @@ namespace DBDG
     {
     public:
       AssimpModel();
-      AssimpModel(const std::string &file_name, const float &scale);
+      AssimpModel(const std::string &file_name);
       ~AssimpModel();
       void render() const;
       void renderWithAlpha(const float &alpha)  const;
       void renderWithColor3(const Color3 &color)const;
       void renderWithColor4(const Color4 &color)const;
-      void load(const std::string&, const float&);
+      void load(const std::string&);
       void dispose();
     private:
       Node *root;

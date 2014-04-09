@@ -25,7 +25,7 @@ namespace DBDG
   public:
     ModelManager(){}
     virtual ~ModelManager(){}
-    virtual Model* newModel(const std::string &file_name, const float &scale) const = 0;
+    virtual Model* newModel(const std::string &file_name) const = 0;
   };
   
   class Graphic

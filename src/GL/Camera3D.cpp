@@ -61,12 +61,12 @@ namespace DBDG
     float nearHeight = 2*frustumNear*tan(0.5*frustumFOVY*Vector3::TO_RADIANS);
     float nearWidth  = nearHeight*ratio;
 
-    auto axisZ = look - position;           //カメラを中心としたZ軸
-    axisZ.normalize(); 
-    Vector3 axisY = up - axisZ.dot(up)*axisZ; //screenYに対応 Y軸
-    axisY.normalize();
-    Vector3 axisX = axisZ.cross(axisY);       //screenXに対応 X軸
-    axisX.normalize();  
+    Vector3 axisZ = look - position;           //カメラを中心としたZ軸
+    axisZ.normalize();     
+    Vector3 axisX = axisZ.cross(up);       //screenXに対応 X軸
+    axisX.normalize();    
+    Vector3 axisY = axisX.cross(axisZ); //screenYに対応 Y軸
+
     Vector3 direction = axisY*screenY*nearHeight + axisX*screenX*nearWidth + axisZ*frustumNear;  
     direction.normalize();
   

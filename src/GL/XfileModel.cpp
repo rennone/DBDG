@@ -35,10 +35,10 @@ namespace
 
 namespace DBDG
 {
-  XfileModel::XfileModel(const std::string &fileName,const float &size)
+  XfileModel::XfileModel(const std::string &fileName)
     :Model(fileName)
   {
-    load(fileName, size);
+    load(fileName);
   }
 
   XfileModel::~XfileModel()
@@ -95,7 +95,7 @@ namespace DBDG
   }
 
 //メッシュ情報の読み込み
-  void XfileModel::readMesh(FILE *fp, std::vector<Vector3> &vertices, std::vector<int> &indexis, const float &size)
+  void XfileModel::readMesh(FILE *fp, std::vector<Vector3> &vertices, std::vector<int> &indexis)
   {
     char buf[255];
     int err;
@@ -110,7 +110,7 @@ namespace DBDG
     {
       Vector3 vec;
       err = fscanf(fp,"%f;%f;%f;,",&vec.x,&vec.y,&vec.z);
-      vertices.push_back(vec*size);
+      vertices.push_back(vec);
     }
   
     //頂点インデックス読み込み  
@@ -225,7 +225,7 @@ namespace DBDG
     }
   }
 
-  void XfileModel::load(const std::string &fileName, const float &size)
+  void XfileModel::load(const std::string &fileName)
   {
     Material mtl;
     std::vector <Vector3> Vertex;//頂点
@@ -257,7 +257,7 @@ namespace DBDG
     
       //頂点 読み込み
       if(strcmp(key,"Mesh")==0)    
-        readMesh(fp, Vertex, VertexIndex, size);
+        readMesh(fp, Vertex, VertexIndex);
     
       //法線 読み込み
       if(strcmp(key,"MeshNormals")==0)    

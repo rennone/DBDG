@@ -10,10 +10,10 @@
 
 namespace DBDG
 {
-  Model* GLModelManager::newModel(const std::string &file_name, const float &scale) const
+  Model* GLModelManager::newModel(const std::string &file_name) const
   {
     std::string full_path = FileIO::getInstance().getRootDirectory() + file_name;
-    return new AssimpModel( full_path, scale);
+    return new AssimpModel( full_path );
   }
   
   void GLModelManager::Material::bindMaterial() const
@@ -121,10 +121,10 @@ namespace DBDG
     glPopMatrix();
   }
   
-  GLModelManager::AssimpModel::AssimpModel(const std::string &file_name, const float &scale)
+  GLModelManager::AssimpModel::AssimpModel(const std::string &file_name)
     :Model(file_name)
   {
-    load(file_name, scale);
+    load(file_name);
   }
 
   void GLModelManager::AssimpModel::loadMaterial(const aiScene *scene)
@@ -166,7 +166,7 @@ namespace DBDG
     }
   }
 
-  void GLModelManager::AssimpModel::load(const std::string &full_path_name, const float &scale)
+  void GLModelManager::AssimpModel::load(const std::string &full_path_name)
   {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(full_path_name, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);

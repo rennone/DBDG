@@ -46,9 +46,9 @@ namespace DBDG
     };
 
   public:
-    XfileModel(const std::string&, const float&);
+    XfileModel(const std::string&);
     ~XfileModel();  
-    virtual void load(const std::string &file_name, const float &size);
+    virtual void load(const std::string &file_name);
     
     virtual void render() const;    
     virtual void renderWithAlpha(const float &alpha) const;
@@ -61,7 +61,7 @@ namespace DBDG
     std::map<std::string, Texture*> textureList; //テクスチャ       
   
     void readMaterial(FILE *fp);
-    void readMesh(FILE *fp, std::vector<Vector3> &vertices, std::vector<int> &indexis, const float &size);
+    void readMesh(FILE *fp, std::vector<Vector3> &vertices, std::vector<int> &indexis);
     void readMeshNormal(FILE *fp, std::vector<Vector3> &normal, std::vector<int> &indexis);
     void readTexCoord(FILE *fp, std::vector<UV> &uv);
     void readMeshMaterialList(FILE *fp, std::vector<int> &indexis);

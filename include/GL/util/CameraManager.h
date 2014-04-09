@@ -12,7 +12,7 @@ namespace DBDG
     class CameraManager : public Actor
     {
       QuarterViewCamera *camera;
-      std::shared_ptr<Movable> target; //todo we must use smart pointer
+      std::shared_ptr<HasPosition> target;
       unsigned int upKey, downKey, rightKey, leftKey;      
       unsigned int moveToTargetKey, switchTargetModeKey;
       unsigned int zoomInKey, zoomOutKey;
@@ -27,7 +27,8 @@ namespace DBDG
       CameraManager(GLGame *glGame, QuarterViewCamera *camera);
       ~CameraManager(){}
       void update(const float &delta_time_sec);
-      void changeTarget(std::shared_ptr<Movable> target);
+      void changeTarget(std::shared_ptr<HasPosition> target);
+      
       void changeControlKey(const unsigned int &yawRightRollKey
                             ,const unsigned int &yawLeftRollKey
                             ,const unsigned int &pitchUprollKey
